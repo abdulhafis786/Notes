@@ -1,0 +1,31 @@
+git revert HEAD --no-edit -- to revert the changes from the commit
+
+git reset --hard -- to remove the changes from the staging location
+
+git revert HEAD...HEAD~2 -- to undo the changes between the commit. Bit confusing but have to see how it works
+
+when in a conflict between the same files in local and remote repo and it needs to choose between the two, you can use the below
+
+git checkout --ours staging.txt -- to use file in local
+
+git checkout --theirs staging.txt -- to use files in the remote
+
+git branch -va --- to show the branch with the last commit message
+
+git blame list.html --- to know who did changes on what file
+
+git blame -L 6,8 list.html --- to know who commited only that specific lines the we can do this
+
+git cherry-pick <hash-id|ref> -- this command is used to merge only the selected lines or selected files from the log output. this is done to merge only the requested files 
+
+git rebase --interactive --root -- this command opens up the entire log history with which we can make edits as required. It has options as below,
+
+pick = this is available by default
+rework = when given this option, you can change the commit message for the line where you gave
+edit = when given this option to any line and saved, it will ask the option either to amend or continue, if you give amend, it will open the commit message of the line where edit was given and you can edit and save.
+squash = this option squashes the log messages into a single one. Make sure you leave the first line as pick and the remaining as sqash or the selected lines to be squashed. This will reduce the log output.
+fixup = similar to squash but doesnot show the log messages squashed.
+exec = allows to execute shell scripts
+
+
+
