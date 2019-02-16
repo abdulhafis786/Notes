@@ -1,0 +1,251 @@
+git config --list --- to list the configuration of the Git installed
+
+git help <option> --  to show the manual entry for an specific option
+
+git init --- to initiate a diretory as GIT repository
+
+/c/Users/personal/Git -- path for git repository
+
+git config --global user.email "you@example.com" ---- Default step in creating Git
+git config --global user.name "Your Name"
+
+git clone https://github.com/abdulhafis786/ --- to close an existing repository
+
+git branch --- to know the current branch
+
+https://github.com/manikabedi/devops-batch.git --- Done
+
+git diff --cached ---- to show the changes done with the file staged to the working directory
+
+git diff ---- show changes with the local copy to the working copy
+
+git commit -a -m "Skipping the add command" -- Skipps the git add command and goes directly to commit status
+
+git rm --cached anywaygonnaremove.txt --- to remove the file from the staging area
+
+if just deleted the file with rm command it removes it from the directory but does not remove it completly. To remove it completly give git rm <file name>. 
+
+git log -p -2
+ --- shows the last two lines indetail of the log
+
+git log --stat -2 --- show the statistics of the log
+
+git log --pretty=oneline --- gives me one line output
+
+git commit --amend --- u can change the recent commit message with a new one
+
+git reset HEAD MyFourthfile.txt ---- If the file is staged, it will push back to the original status.echo "
+
+git checkout -- MyFourthfile.txt --- removes whatever you had in the file before it is staged. runs only on the files in the working directory and not in the staged location
+
+git remote --- to show which remote repo its been connected with
+
+git remote -v --- to show the remote repositories in a detailed manner
+
+git remote add abdul https://github.com/abdulhafis786/devops --- To add the remote repository to local repository.make sure u create a direcotry before addng the remote repo
+
+git clone https://github.com/abdulhafis786/devops --- this will clone the remote repository to the local repository
+
+so one thing here is that if you do a git fetch, it does not copy anything from your remote repository but at the same time u do a git pull u get a full copy of that repo
+
+git pull <branch name> --- to pull all the contents from the remote repository
+
+git push origin master --- to push from local repo to the remote repo. The master is the branch in the remote repo where u have to push. if you need to push to a seperate branch specify the name here
+
+git remote show <remote name> ---  to show a detailed instruction on remote repository connected
+
+git remote rename origin abdul --- to rename a remote repository
+
+git remote rm abdul --- to remove the remote reposiroty connected
+
+git tag -- to show the list of tags created in the remote repository. tags are nothing but bookmarks in specific point in time of a project.
+
+
+git tag -a v1.1 -m "Creating a new tag" --- creating a new attonated tag
+
+git show v1.1 --- will show a detailed version of the tag
+
+git tag v1.2-lw -- to create a light weight tag.. Note that tag will always take the last commit that has been done
+
+git push origin <tagname> -- to push ur tag to the remote repository
+
+git push origin --tags ---- if you have many tags and wanted to push all at once u can use tags
+
+git tag -d v1.4-lw --- to delete a tag
+
+git push origin :refs/tags/v1.4-lw ---- this will update your remote repository that the particular tag has been deleted
+
+git branch testing --- to create a new branch
+
+git branch --- shows me which branch I am currently in
+
+git checkout testing -- to switch to a new branch
+
+Whatever files u have in your Branch will not be visible in your master branch until u commit the files in your branch
+
+git checkout -b iss53 --- to create a new branch and switching into it
+
+git merge hotfix --- to merge your branch with the main master branch
+
+git branch -d testing --- to delete a branch
+
+git branch -D newbranch1 remove rm -- to delete multiple branch at the same time
+
+git branch -v --- to show the last commit happened on the branch
+
+git branch --merged --- to show the branches that have been merged or available to merge
+
+git branch --no-merged --- to show the unmerged branch 
+
+Git will throw a warning if there is a change in th files of a particular branch which has not been merged. If you want to override the warning, just give git branch -D testing to delete the branch
+
+$ git checkout -b tracking  abdul/master
+Switched to a new branch 'tracking'
+Branch 'tracking' set up to track remote branch 'master' from 'abdul'. --- this will track the branch master from my remote repo Abdul
+
+Tracking is done to reduce the issues from where the data has to be pulled and which branch the data has to be fetched.
+
+once tracking is set, u dont have to mention the full path or path where the data has to be pulled or fetched from. Running git pull or fetch would do the same. 
+
+If using fetch, u have to give merge.. so to avoid this we use pull command.
+
+git branch -vv -- to show the tracking status. Difference between our remote repo and our local repo
+
+$ git branch -vv
+  master   b9d5af4 [abdul/master: behind 3] new files added -- this is behind 3 commits from the remote repo
+* tracking 65eb45d [abdul/master] Update MyFirstfile.txt -- all updated
+
+git push abdul tracking -- to push the new branch created to the remote repo
+
+git push origin --delete serverfix -- to delete the branch in the remote repo
+
+git rebase master --- this is similar to merge command. you have give the branch where the changes are in place.
+
+git rebase master
+First, rewinding head to replay your work on top of it...
+Fast-forwarded testing to master.
+
+git rebase slave1 master -- to merge the changes from one branch to another bypassing the middle one
+
+$ git rebase slave1 master
+First, rewinding head to replay your work on top of it...
+Fast-forwarded master to slave1. -- here I rebased the changes from my slave1 branch to master bypassing slave
+
+git request-pull abdul/master tracking ---- this command is issued to let the notifier know that the particular changes have been made and those are needed to be pushed in the master of the the remote repo. This is mainly used when we dont have a push access to the master  repository.
+
+git checkout -b newbranch abdul/master
+Switched to a new branch 'newbranch'
+Branch 'newbranch' set up to track remote branch 'master' from 'abdul'. --- if i specify the path from where the branch has to be referring its master branch, it automatically starts tracking. here the abdul/master is given so that the new branch will start tracking the remote repo. without giving the abdul/master it will create only new branch as below
+git checkout -b newbranch1
+Switched to a new branch 'newbranch1'
+
+git format-patch -M origin/master --- to send the commits to the maintainer in the form of patches.here the commit message becomes the subject
+
+git apply /tmp/patch-ruby-client.patch -- to apply the patch received to your local repo. this is to be done only if the patch had been generated with a diff command. if its generated with a format-patch it must be applied with git am command.
+
+git apply --check 0001-seeing-if-this-helps-the-gem.patch -- to check if the patch could be appled cleanly before applying
+
+git log contrib --not master -- to show the logs only from the branch specified. Here it will show logs from the contrib branch and not from the master branch.
+
+git log tracking --oneline --not master
+65eb45d (abdul/tracking, abdul/master, abdul/HEAD, tracking) Update MyFirstfile.txt
+038415c Update MyFirstfile.txt
+f120ad7 tracking
+
+git diff master...tracking -- to show me the difference between my master branch and the tracking branch. This is called a three dot method
+
+git config --global rerere.enabled true --- this option when enabled is a way of shortcutting manual conflicts.When rerere is enabled, Git will keep a set of pre- and post-images from successful
+merges, and if it notices that there’s a conflict that looks exactly like one you’ve already fixed, it’ll
+just use the fix from last time, without bothering you with it.rerere (reuse reorded resolution)
+
+git describe master -- to show what tag is present, how many commits happened and the last commit hash value
+
+git archive master --prefix='project/' | gzip > `git describe master`.tar.gz -- to archive the latest snap shot of the current repository and send it to the others via email or share.The --prefix is given so that when extracted it will be present in the projects directory.
+
+git shortlog --no-merges master --- to show a clean list of al the commit messages and who did it. --no-merge master means the commit happened which are not merged with master
+
+git reflog -- its a temporary reference log of gt which shows who did what and on which commit valie , what command executed etc etc
+
+git reflog master -- specific to that particular branch itself
+
+git show master@{yesterday} -- this command will show the last point when the master was available yesterday. By yesterday it means the last commit value or the pointer in place for the last time the master was being worked.
+
+git log master..testing --- to show what is available in the master which is not available in the testing branch
+
+git log --left-right master..testing -- to show what has been changed in detail of the two branches
+
+git add -i --- to use the git in a interactive mode
+
+git stash -- this command is useful when you have some uncommited work in your urrent branch and you have to switch to other branch for some work. Wihtout this command it will not allow you to switch
+
+git stash list --- shows me the list of stashes made. it takes the last commit message of the current branch
+
+git stash apply -- to apply the changes which had been stashed. But it modifies the changes even in the staged directory so to avoid that you have to give --index
+
+git stash drop --- this will drop the list of stashes present. Just giving this command will drop all the stashes. if you want only a particular stash to be dropped just give the stash name
+
+git clean --- to clean up the working directory. This command removes all the untracked files and makes it clean. To forcefully remove the files give -f in the command. To know what files are about to be removed give -n and it will show which files will be removed.
+
+git grep I -- shows you the list of files matching the pattern. similar to grep in unix.
+
+git grep --count I -- shows you how many lines in each file contain the matched pattern.
+
+git commit --amend --no-edit --- Amend is usually given to edit the last commit message to the new message as needed. with --no-edit option, it uses the same commit message as earlier and u dont have to edit anything
+
+git rebase -i HEAD~20 --- this will allow us to edit the log messages. Here HEAD~20 lists the first 20 log messages.Depending on the method you want to edit the log file give the different options you see in the list
+
+git filter-branch --tree-filter 'rm -f MyFirstfile.txt' HEAD --- THis command will filter the branch and would remove the entire entry of the file specified. Workes only in the branch where you specify this message
+Rewrite 437e7d49e550e2fcf74ac21994098abe35d11acf (25/27) (11 seconds passed, remaining 0 predicted)
+Ref 'refs/heads/master' was rewritten
+
+git merge --abort -- to abort a merge happening
+
+git reset --hard HEAD -- to bring back the repository to the last commited phase(this must not be used often as it is a dangerous command)
+
+git merge-file -p \
+hello.ours.rb hello.common.rb hello.theirs.rb > hello.rb ---- to merge three files into one in git
+
+git diff --ours ---- compares between local working copy to the repo
+
+git diff --theirs --- compares the local working copy to the staging repo
+
+git checkout --conflict=diff3 hello.rb --- this option is given as a part of merge conflict for a file when we do a merge. This will show the git diff of ours theirs and base option.
+
+git config --global merge.conflictstyle diff3 --- to set as an option permanently in global configuration for merge conflict
+
+git merge -Xours testing --- This option is useful when you merge with an other branch and you need to retain only your changes in the file rather than theirs. If you want theirs to be in the file then give -Xthiers in the option
+
+git config --global rerere.enabled true --- to enable rerere option in git.. rerere means reusable reference resolution. this will help Git to automatically solve the issues that occur repeatedly
+
+git bundle create repo.bundle HEAD master --- this command is to create a bundle . Bundle is nothing but the data in a repo clubbed in a binary format that could be transferred via mail or in a drive
+
+git clone repo.bundle repo --- to clone the bundle into a new directory.
+
+git revert HEAD --no-edit -- to revert the changes from the commit
+
+git reset --hard -- to remove the changes from the staging location
+
+git revert HEAD...HEAD~2 -- to undo the changes between the commit. Bit confusing but have to see how it works
+
+when in a conflict between the same files in local and remote repo and it needs to choose between the two, you can use the below
+
+git checkout --ours staging.txt -- to use file in local
+
+git checkout --theirs staging.txt -- to use files in the remote
+
+git branch -va --- to show the branch with the last commit message
+
+git blame list.html --- to know who did changes on what file
+
+git blame -L 6,8 list.html --- to know who commited only that specific lines the we can do this
+
+git cherry-pick <hash-id|ref> -- this command is used to merge only the selected lines or selected files from the log output. this is done to merge only the requested files 
+
+git rebase --interactive --root -- this command opens up the entire log history with which we can make edits as required. It has options as below,
+
+pick = this is available by default
+rework = when given this option, you can change the commit message for the line where you gave
+edit = when given this option to any line and saved, it will ask the option either to amend or continue, if you give amend, it will open the commit message of the line where edit was given and you can edit and save.
+squash = this option squashes the log messages into a single one. Make sure you leave the first line as pick and the remaining as sqash or the selected lines to be squashed. This will reduce the log output.
+fixup = similar to squash but doesnot show the log messages squashed.
+exec = allows to execute shell scripts

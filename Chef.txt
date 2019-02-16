@@ -1,0 +1,6 @@
+(get-command ruby).path ---- to get the path of the ruby. Myst be run from powershell
+
+chef-client --version -- to get the client version of Chef. Must be above 11
+
+gem list test-kitchen -i ---- to check if the gem installer is present in the machine.This is to check if the test kitchen is present
+

@@ -1,0 +1,905 @@
+Everytime we make a commit, Git creates a commit ID.
+
+Anytime a tag is created, it will take the last commit message.You can also tag a older commit by giving the commit ID.
+
+git push --tags -- will push all the tags in the local repo
+
+To push one tag to the remote repo just give git push origin <tag name> 
+
+while creating tag we give -a for attonated tag and -lw for light weight tag. tag is a read only snapshot of the commit
+
+Branches are read write where you can do anything.
+
+Always have to be in the destination branch where you want to merge.
+
+Even merge will take the last commited messages.When you merge one branch to another , the last commit message made on the source branch will be taken as the commit message
+
+Clean merge will create a automated commit.
+
+git branch -m feature1 ---- to rename a branch. To push it to the remote repository give, git push origin :feat1 feature1. It will automatically get renamed.
+
+git stash save "Message" -- to stash any uncommited files before switching
+
+git stash apply "Stash vaue" -- to apply the stash
+
+git stash drop "Stash id" --- to delete the stash.
+
+git stash clear --- to cleanup all the stashes
+
+git revert "commit ID" --- to revert the changes made earlier. Always try reverting the changes that has been commiting recently but merged commits cannot be reverted
+
+Submodules allow to include other git reporsitory inside your repository.
+------------------------------------------------------------------
+
+Vagrant:
+
+Its a simpler way for virtualization and configuration management.
+
+it imports pre-made images called boxes
+
+vagrant init ---- to initialize vagrant.. This will create a vagrant file. Inside this file we have an option called config.vm.box ="base". Edit this to use the default Virtual box.you can also give the image name along with init command.eg:vagrant init ubuntu/trusty46
+
+https://apps.vagrantup.com/boxes -- links for vagrant boxes
+
+vagrant up -- to bring the vagrant machine.
+
+---------------------------------------------------------------
+
+Docker:
+
+OS lever virtualization needs a s set of tools.
+
+1.Virtualization subsystem --docker
+
+2. Cgroup hiererchy -- Control group heirarchy. Set of resorces assigned to a control group.
+
+3.Container mounted into a file system
+
+A [program running into a container has a 
+
+Chroot to restrict the container file system
+
+Cgroup constraints the use of resources and isolates the container from the rest of the system.
+
+Docker is a ligh weight os Virtualization container plaform.
+
+Provides a way to run software in solation
+
+Container acts as jails. No unauthorized access to any one
+
+Docker is a client server architecture..
+
+Client : Runs the docker commands by connecting to the Docker deamon using restful API. Connects using HTTP.
+
+Server: its the docker deamon which manages the Docker container.
+
+Registry: Place where the docker images are stored.
+
+docker stats -- show the statistics of running container
+
+docker pause <conainer name> -- to pause a container.This is mailny used to find out the memeory statistics of the container. Kinda like Freezer on unix control group.
+
+Docker unpause <container name> --- to unpause a container. When you give this, any commands that were given when the container was paused will come back and get displayed on the screen.
+
+docker rm -f <container name> -- to focefully remove the container.
+
+docker commit contanername newimage --- to manually create a image using a base image.You can run this command even after exiting the container.
+
+docker inspect --- to inspect an image created.
+
+Docker file -- file to automate the build process.
+
+FROM: defines a starting image
+MAINTAINER : Email address of the builder
+SHELL :must be specified in the shell where it needs to be run. For windows it must be "cmd" and in Linux it muxt be "/bin/sh"
+eg; SHELL ["/bin/sh", "-c"] for windows it must be "cmd"
+Format SHELL["executable","parameters"]
+
+COPY: Copies from source to the building image. The source must be present where the docker file is run
+
+ADD : Copies files even from a remote location. unlike COPY which needs the files to be in local.
+
+RUN: this is to execute the linux commands.
+
+EXPOSE: command to expose a port in docker file.
+
+CMD: This will set the command as the default one for the image so that when an container is created from that image, it will use that as the default command.
+
+Docker build --- command to build a image. -t is given to tag a name to the image.
+
+ssh-keygen -t rsa --- to create a ssh key pair.
+
+docker has a feature of layering when building images. which means it uses the pre build from the cache and reuses it to make it to create a new image.
+
+if you want to push to a local repository then you have to tag the image
+
+eg:docker tag ssh:alpine localhost:5000/ssh:alpine
+
+then we push our image to the registry using push command.
+
+There are three default network that we get when we install docker.
+
+docker network ls -- to list the network.,
+
+User defined network could also be created.if none is specified it would use default as bridge.
+
+bridge network assigns IP address and gateway.
+container running in none network could not connect to any network. Its only interface is host
+
+Container using the host netwoek has the same network as the host running.
+
+Container running in bridge can connect to other network and also to other containers. Bridge suppies the /etc/hosts file for each container.
+
+None and host network are not used anymore.
+
+docker create network create <Name> --- to create a new network.default it takes Bridge driver.
+
+docker network inspect bridge --- to inspect the driver bridge and could see which containers are running in the network
+
+To make the userdefined network to be used in our container, give --network in run command
+
+to add a container to another network give,
+
+docker network connect <name> <container name> 
+
+When you give exit for a Deamon container it would still be running.
+
+RUN command is given to do some changes to your image build but CMD is the hardcoded comand that would run when the container is build using the image
+
+Docker compose:
+
+Tool for running multi container Docker application. They use the word service to represent the container in orchestration tool. 
+
+docker-compose --version -- to check the version of the docker compose
+
+every YAML file begins with a --- Compose files are written in YAML file.Compose accepts only yaml file
+
+docker rmi <imagename> -- to delete the image created.
+
+docker-compose up -d --- Command to bring the Docker compose. All the services that are defined in  yaml file will be started. To build a image for the service to be run, create a subfolder with the service and place the Docker file in it so that when it is defined in the Yaml file, it will run it.
+
+Docker-compose ps -- to list the processes running through docker compose
+
+docker-compose down -- to bring down the Containers started by docker-compose. --volume will remove the volumes also.
+
+
+Yaml file contains the instruction that is needed for the containers to run and the compose will keep on checking on the containers running in the Server and would start a new one if the defined limit goes down.
+
+Compose will look into docker-compose.yaml file and not any other thing.
+
+
+Services will have their own docker files but the compose will look into the docker-compose.yaml file in which the services are defined.
+
+-----------------------------------------------------------------
+
+CHEF:
+
+Configuration Management tool. Provides the Infrastructure as a code.owned by opscode
+
+Chef uses recipes that is used to set up the Infrastructure. It can run as both Client/server model or a standalone configuration called "Chef-solo"
+
+Chef server must be running in a Linux machine. A client could be either Windows or Linux
+
+Chef Architecture:
+
+Chef server --- Central repository for holding up all the recepies. It could be an inhouse or a hosted Chef server.
+
+Chef Developement Kit -- it has tools to install and test the infrastructure Automation code
+
+Chef client ---Nodes which are managed by the chef server. Physical machines that pull the recepies from the chef server.
+
+Chef client service --- Service that run on the nodes managed by Chef which will poll or ping the chef server to check if there is any changes to the infra code.Default 30 mins
+
+IAC code are applied on the server which Application code is run on the server.
+
+Chef client
+ polls the data from the server and publishes a report back. It collects the data called resources from the node in which the client is running
+
+
+If there is any tool that is installed on the node which is not available in the Code, Chef would remove the installation automatically.
+
+Context of Chef:
+
+Chef server-- either on Premises or Hosted
+
+Web interface -- Management console
+
+Push jobs --- ability to push the jobs to the server. usually pull is the default behaviour of the Architecture.
+
+Developement Kit --- installed on the Workstation 
+
+
+Cookbooks --contains the recepies for the node created by ChefDK
+
+knife -- used to connect to the Chef server
+
+
+Test kitchen -- Utility that is used to test the cookbooks and recepies before pushing to the server
+
+
+
+Organization.--- A top level entity for a role based access control in CHef server. Each organization has a default group with atleast one user and one node
+
+https://downloads.chef.io/chefdk ---to download the chef developement kit. Chef needs to be installed in the Machine.
+
+Starter kit --- utiltiy that is used to connect to the Chef server.
+
+Every node will belong to one Organization. Organization could have many environment.
+
+Each node will beong to one environment -- by default Prod 
+
+Each environment will have zero or more roles 
+
+Resource --- they are created by defaults and could be used in our IAC.
+
+All the IAC tools use Ojects that is similar to the Object oriented language that allows the code to be reused. In chef the objects are called resources.
+
+Recepies--- Files in which we write our chef code. Recepies ensure the system in a desired state. recepies mostly use resources in the code.
+
+Chef as a tool uses a Declarative language..Declarative languages are the one where you dont have to let the code know whow it has to do the work. you just declare the desired state of the machine you need.
+
+The way in which the packages are depoyed by chef uses the resources that are collected by the chef client running on the node.
+
+Recepies are stored in cook books. They also include templates needed for the configuration files, Files that needed to be present in all machines and custom resources that needs to be present in the machine.
+
+Run -list --- it define the information necessary to configure a node into desired state. It has the list of recepies that are to be executed in exact order that it needs to be installed on the node.Chef client gets the runlist from the chef server.
+
+knife.rb --- configuration file for Knife. Each check server will have a specific knife file. Its not an interchangeble
+
+Knife help list -- to list all the commands that could be executed with Knife utility.
+
+Modularity --- How loosely coupled our system or code components can be so that when they are combined together, how best they can work together.
+
+knife -- to test if the installation is complete for chef DK.
+
+Bootstrapping -- process of adding the node to the Chef server. The reason for giving it as Bootstrap is basically assigning the nodes to the server. the server takes care of the node that is bootstraped and it becomes slave for the server.The server decides what it needs to do on the node.
+
+knife bootstrap <IP of the node which is to be bootstrapped> --ssh-user <username of the node> --sudo --identity-file <pem file that is used to connect to the Node from putty> --node-name <name to be given in Chef server>  ------- command to bootstrap a node to the chef server. This will automatically install the chef client also.
+
+Ohai --- utility that list the configuration information of the Node connected to the chef Server. Similar to Facter.
+
+under /etc/chef in the node there would be a file called client.rb which could be edited to change the parameters of the node. For eg log level, Log location. We can get additional configuration options in Getchef.com/clientrb/index.html
+
+Any node that we add to the chef server will take the _default environment which is the production environment.
+
+chef generate cookbook apache --- here the apache cookbook is generated . We can create cookbooks for amy software installation needed on the node. This must be runn from the cookbooks directory.The cookbook generated will have a directory created in its name.
+
+under the Directory there is a subfolder called recipies which has a default.rb file which is edited to make appropriate changes to be made on the node
+
+Resources are declarative and they take action using the providers. Chef uses the platform in which the node is running to get the providers which inturn is used by the resources.
+
+There are many resources that could be used while writing a chef recepie.
+
+Every cookbook needs to have a Files directory that contains the default files that needs to be included in our recepie. we can create a subfolder called default in it to put our default files to it.
+
+knife cookbook upload apache -- to upload the cookbook to the Chef server. here the cookbook named apache is uploaded.
+
+knife node run_list add <Nodename> "recipie[recipie name]" -- To add the run list to your node. only then u can see the run list added to your node. you can do it in gui mode also.
+
+chef-client --- to refresh the chef client .. this is run in the Node  connected to the server.
+
+
+idempotence -- it means Applying the same action multiple times and the end result does not change.
+
+Convergence -- Chef is a "Desired state configuration"--ie if a resource is applied then no action is taken.
+
+knife node list --- list all the nodes that are bootstraped to the chef server to which the chef repo is configured. One chef repo will get configured for one chef server.
+
+Knife client list -- to list the chef client installed in the nodes
+
+Knife node show <Node name> -- to get the details of the node.
+
+knife node show <Node name> -a fqdn -- to get the fully qualified domain name.
+
+role --- A role is a common grouping of the Runlist that could run on a node. Its like instead of running a run list which contain the recipie, we create a roles which has a set of run lists which could run run on nodes. instead of one run list on each node , a set of run lists on each node.
+
+Environment --- here the code is run as per environment. Recepies is designed as per environment and the entire recepies are run when a particular environment is build.
+
+knife role from file <file name.rb> --to push the roles file to the chef server. Here the roles file are created under the roles folder in Chef repo.The file extension must always be .rb file
+
+knife environment list --- to list the environemt in our chef server.
+
+To create a new environemt createa ruby file in.rb under the environemts directory. If there is no directory, make one
+
+knife environment from file <filename>.rb --- to push the environment file to the chef server.
+
+When u specify the environment, it will apply only the cook book constraint(version) that is given rather than the Version specified in our run list.
+
+
+-----------------------------------------------------
+
+PUPPET:
+
+Set up:
+
+Puppet master ---manages multiple nodes
+puppet agent --- installed in the nodes which connects to the puppet server
+
+Catalog -- describes the desired state of the computer. It will list all the resources and the dependencies.Puppet uses several source of information to compile the catalog.
+
+Puppet has both client/server architecture and a Solo architecture.
+
+Facter --- its like a command that gathers the facts of the nodes.
+
+Puppet uses R10K utility that connects with the source code to import the IAC code.
+
+Each master and server must need a Valid SSl cert to identify each other.
+
+The puppet agent on the nodes connects to the puppet server every 30 mins to get the catalog and if there is any change from the desired system state and applies the code
+
+Compiling the catalog ---- Master gets the facts from the node and compiles the code to that particular node and sends the catalog to the node to apply it.
+
+by default The puppet server listen on port 8140 and has a default pull architecture or could manually push the configuration to the particular node using Mcollective.
+
+puppet --version -- to check the version of the installed puppet.
+
+For agent the package name is puppet and for master it is puppetmaster.
+
+/etc/puppet/puppet.conf -- configuration file for Puppet which we edit to make the changes to get the agent connected to puppet master. At the main context add 
+server=<Master server name>
+
+puppet cert list --all -- To list all the certs. This is given in Master server. The + sign in the front of the name means the cert is signed. The cert must be signed to make connection to the master from the agent.
+
+puppet cert sign --all -- to sign all the certs. To sign only a particular cert just give the name.
+
+puppet agent --enable -- to enable the agent
+
+puppet agent -t -- to refresh the puppet agent on the node.
+
+facter  ---- to get the facts on the node. run on the node
+
+Puppet lanuage defined states. Puppet code is written in manifests under the extension of .pp. 
+ Resources -- these are abstracted from the underlying OS and depending on the OS the resources take the necessary providers.
+
+puppet resource user -- to list the user resources.
+
+Puppet resource package -- to list the packages present in the node.
+
+/etc/pupet/site.pp -- main maifest file of puppet. Puppet runs all its code in its manifest files extended in .pp format --- Puppet policy
+
+
+Puppet picks the code based on the sequence of Reg expression, Matched node and the Default.
+
+You can use many resource attribute to write a puppet code. File is a resource attribute like whise package is a resource attribute and so is service.
+
+puppet agent --noop ----- to get a dry run output of the puppet apply.shows the error if any before appllying the catalog.The puppet will still log on what would have happened if the run had happened.
+
+
+Node definition --- Block of puppet code that will be included only in matching node catalog. Similar to regular expression
+
+When a node connects to the puppet master, the master has to decide what parameters have to pass to the Node, what classes have to be applied and compiles a cataloge and sends back to the node to gt applied.
+
+Resource collectors --- they select a group of resources by searching a attribute of every resource. eg :ensure  and content are the attributes of the File resource.  Puppet applies the code in order in which it is defined. This is called evaluation order. Resouce collectors are independant of the evaluation order. Resource collector will collect the attribute of the resources even though it is still not applied or defined. The Job of the resource collector is to check for the available resources in the code and collect the attribues that each resource would apply. The main job is to analyse the code and build the most efficient command that could be run on the node. Thats the reason resource collector would scan the code and get the resource and attributes.
+
+Virtual resources --- declaration specific to the desired state of a resource without enforcing the state.They are used in 2 steos. Declaring and realizing.
+
+Declare : Declaring the resource using the @ symbol eg:@a2mod
+Realize: Using with the keywork realizze eg:realize a2mod
+
+Giving a @ symbol makes it a virtual resource and puppet considers the same. you can use the virtual resource to realize in the code using the title.eg: realize (user['deploy]') --- here deploy is the title of the resource user.
+
+Exported resource ----declaration of a desired state of a node and share among different resources. Exported resources enable the puppet compiler to share the information among the other nodes by compiling the information among other nodes. This helps the nodes to manage things that rely upon other nodes for the state or activity of other node. mainly used in backup and monitoring. Exported resources are defined with @@ symbol. $ in puppet code means Variable declaration and $:: means global variables.
+
+Relationships : Puppet uses four Metaparameters to establish the relationship so that we could set each of them as a attribute to any resource. they are before, require , notify , subscribe
+
+before --- Applies the resource before the target resource.This tells the puppet to apply the resource before the target resource. Here the value defined above the Before becomes the target resource.
+
+require --- Applies the resource after the target resource. Here the value defined in the resource becomes the target resource. so anything defined in require will be executed first
+
+Notify --- Applies the resource before the target resource. The target resource refreshes if the notifying attribute changes.Here if the value of the notifying resource changes, the target resource is refreshed. Here the notifying resource is the one defined above the notify attribute in the code.
+
+Subscribe -- Applies the resource after the target resource. The Subscribing resource refreshes if the target resource changes.The resource defined under the Subscribe attribute becomes the target resource.
+
+"In Puppet code, anything defined in lower case eg:file is a puppet resource an anything defined in upper case eg:File, they are the actual resource that is needed"
+
+source --- Attribute used in a resource to fetch the content from one location to be replaced completely.
+
+Chaining arrows:  Relationships can be created using chaing Arrow.
+
+-> -- Applies the resources on the left before applying to the right.
+
+~> -- Applies the resouce on the left first. If the left resource changes, the right must refresh itself.
+
+Require --- this declares a class and causes it to become a dependancy of the surrounding class. Class is nothing but a bunch of puppet code.
+require establishes a hard dependancy in the code. ie if one resource is not applied completely the puppet code will not proceed further.
+
+eg: Class wordress{
+	require apache
+	require mysql
+   }
+
+Here the class calls the apache and mysql classes.
+
+Refresh events: --- events that makes the resouces to refeshes during the runtime.
+
+Variables --- nothing but the values provided in the codes. They can be either defined as global variable or hardcoded.
+
+ENC -- external node classifier.Hiera is an example of ENC.
+
+Sensitive --- its a kind of data type which when given in Puppet code when compiled does not get written in the logs.
+
+Classes -- These are named blocks of puppet code that are stored in modules for later use and are applied when they are invoked by name.
+
+A module can have multiple classes and this coudld be referred in your site manifest or the entire module.
+
+class base::linux ---method to define a Class within a module. here base is the module and linux is  the class. To include this calss in the module use include base::linux
+
+to the classes which has parameters eg:class apache (string $variables = "version) you can use include apache.
+
+Modues --- self-contained bundles of code and data with specific directory structure. Class contains only the code while module contains both the code and the files required to implement in the node.
+
+puppet module generate <module name> ---- To create a module under modules directory.This will generate the directory with the same module name and which contains manifests which has init.pp
+
+init.pp --- the first file in the module which puppet would refer to. you can edit this and create your classes in this file or create seperate .pp files and this must be referred in the init.pp or the classes would not be included.
+
+tests -- directory which also contains the init.pp in which you can include the module to test before actually applying to the site.pp.
+
+puppet apply init.pp --- to test if the applied modue runs fine. this must be given from the testes folder and the init.pp is the one present in the tests folder.
+
+Templates --- documemts that compile code data to produce a desired output. Anything that is static is hardcoded in the template and anything that is needed to be fetched during runtime is given in $ sign. Templates are written in either erb(embedded ruby) or epp(embedded puppet).
+
+----------------------------------------------------------------------
+
+ANSIBLE
+
+Its a configuration management tool which traditionally uses a push architecture.Ansible clients dont have anny agent installed in them but ansible architecture allows you to implement a pull architecture anywhere needed.
+
+Push based system are completely synchronous and changes are made immediately once applied.
+
+Ansible uses playbook to implement the desired configuration changes.
+
+Playbooks are stored in Ansible server which is also called as ansible automation engine.
+
+Playbook contains plays, plays have tasks and tasks have modules. Modules are the unit which are actually executed on the server. In puppet which we call resources here we call as module.
+
+Plugind are avalable to extend the functions of the Ansible.
+
+Ansible also hasa huge support to the cloud.
+
+Ansible does not allow the installation to be done with root.you need to have a user with root previleges to install the setup.
+
+ssh-copy-id user@<server name> --- this is done to copy the ssh keys of the Ansible server and the node on each machine. Same command is applied on node also eg:ssh-copy-id test@ansible.test.org
+
+
+yum install -y epel-release(extra packages for enterprise linux) --- package that needs to be present during ansible installation
+
+Yum install -y ansible ---ansible package installation.
+
+/etc/ansible/hosts --- this is the file that is edited to make the server know which nodes it has to connect. Here we give our server and the node details
+
+ansible all -m ping ---- to ping to the ansible node and the master. This command reads the host file and tried to ping all the nodes defined in it one by one.
+
+ansible all --list-hosts ---- to list all the nodes in your hosts file.
+
+inventory --- it lists all the platform that you want to automate. the Host file is also an inventory file.
+
+modules --- These are the units which actually get the work done  in ansible. they ar used to control the system resource like services, packages etc..They abstact the system tasks like dealing packages. once u define the state in which you need the system to be and module would apply the same. Modules take values in key-value format.
+
+Ansible allows you to run adhoc commands for one time activity also.
+
+ansible localhost -u root -k -m file -a 'path=etc/fstab' --- to list the file fstab. Here -m option is given to indicate file module. Here local host is nothing but what we have defined in our hosts file
+
+ansible localhost -m file -a "dest=/tmp/test mode=644 state=directory" --- to create a directory.
+
+ansible-doc <module name> --- to get the info of the module
+
+ansible-doc -l --- to list the available module.
+
+Anything that is given before -m option is the module name.
+
+Playbooks: it the access point for ansible provisioning. Its the ansible way of deploying and configuring different remote servers. Written in yaml language.
+
+Playbook structure :
+
+Hosts: Beginning of the Playbook. It means the node where the playbook is to be run.
+
+Become: Its for inlined previleges. To become a user in which the play has to be executed.
+
+Vars: also known for variables. defined using vars keyword. They are executed line by line so  variable has to be defined before using it
+
+tasks: All the tasks to be executed are defined in them. One play starting with hosts will have multiple tasks in them.Tasks contains notify and Handlers. Notify contains notify action which are triggered at the end of the block. To trigger the notify we need handlers. Its like invoking a part of the script to be executed first instead of in sequence.
+
+ansible-playbook -i <node name>, <Playbook.yaml> --- to run a playook only for that particular node. We need to have a playbook in yaml file before executing the script.even though we mention as Hosts all in yaml file, we can execute in one node using -i option. -i means inventory
+
+Ansible has the concept of Global variables invoking in the playbook.
+
+You can overwrite the value given to the variable at runtime using -e option
+
+eg:ansible-playbook -i <node name> , <playbook.yaml> -e 'name=test01' --- here the yaml file already has the value defined in it but its overwritten using the value given using -e.
+
+
+Roles:Roles allow you to group the playbooks and allows to create logical groups to execute playboks. This can be grouped in anyway user wants.
+
+ansible-galaxy --- prepacked units of work known to Ansible as roles. To create Ansible roles use ansible-galaxy command which has template to create it. Its created under the default directory /etc/ansible/roles .
+
+ansible-galaxy init /etc/ansible/roles/apache -offline --- this creates ansible roles for apache usinf offline repository. Init is to initialize.
+
+Once roles are created, go to tasks folder and it contains the main.yaml file which is edited to execute the ansible code. 
+
+Whenever notify is included in task there must be a handler created in haldler directory cos notify always needs a handler.
+
+once all roles are st, then create a yaml file to include the role into it.
+
+ansible-playbook <playbookname> --syntax-check --- to check our playbook syntax for any error.
+
+ansible-playbook <playbook.yaml> ---- without any parameters it would install it in all the hosts defined in hosts file.
+
+Roles in Ansible is similar to Modules in puppet.
+
+Tags : Tags are given to execute a small part of the ansible code. Need to give the name of the tag in the command.
+
+ansible-playbook <playbook.yaml> --tags "tagname" -- to execute the tag.
+
+to skip certain tags in the playbook just give --skip-tags "tag name".
+
+pyYAML --- YAML parser and emitter for Python.Its a complete 1.1YAML parser.
+
+------------------------------------------------------------------
+
+SALT stack:
+
+Its a Python based software..It uses ZeroMq messaging library to process high speed requirements for all networking layers. Its based on the Idea of executing commands remotely.
+
+Commands are normally issues from the master to the nodes called Minions to execute the specific task and returs back the resulting data to the master.
+
+Salt stack module communicate with the Minion OS. Salt master must run in Linux in Default but minion could be in any OS.
+Salt master and minion communicate using keys.
+
+Features:
+
+fault tolerance -- minions could connect to mutiple masters at one time by configuring master configuration.
+
+Flexible: -- Could be implemented as Agent-server, agent only, server only.
+
+Scalable --- designed to handle ten thousands minions per master.
+
+Parallel execution -- Enables to execute remote systems in parallel.
+
+Python API --provides simple programming interface and its designed to be modular and easily estensible.
+
+Easy setup --- easy to setup and provide single remote execution.
+
+Language agnostic --- Salt state configuration files, template engine or file supports anytype of language.
+
+Robust 
+
+Authentication --- uses simple SSH keys for authentication
+
+Secure -- uses secure data using  encryption protocol.
+
+fast -- uses a light wieght communication bus to provide foundation for remote execution engine.
+
+Virtual machine automation.
+
+Infrastructure as data not code
+
+Components :
+
+Slat master --- Master deamon. Used to send commands and configuration to salt slaves. One master can server multiple minions.
+
+Salt minions --- receives command from master and executes it. Its also called slaves
+
+Execution --Modules help in executing the commands on one or more minions.
+
+Formulas -- prewritten salt states. These are open-ended as salt states that are used for installing packages, configuring and starting a service etc.
+
+Grain ---Interface that provides information specific to minion. Information availabe through grain interface os static. grain gets loaded when minion starts.case insesitive
+
+Pillar -- generates and stores high sensitive data specific to particular minion such as keys and passwords. stores in keyvalue pair
+
+Top file -- matches salt state and pillar data to salt minions.
+
+Runners -- Module insde the salt master to perform task such as job status, connection status, read data from external API etc
+
+Retrners ---- returns salt data from minion to other system
+
+Reactors -- resposible for triggering reaction when event occurs in environment. its like sending alert if there is any issue with the installation or shutting down a server using a reactor program when the server runs out of resources.
+
+SaltSSH -- used to run salt command using SSH on salt minions.
+
+Salt-master -- package to install master
+
+Salt-minion --- package to install minion
+
+salt-syndic ---- usually salt has a agent-master topology. So syndic package allows you to have a flexibilitu of changing the topology.
+
+/etc/salt/master --- config file in which the value of the master Node IP address is given under interface. 
+
+/etc/salt/minion --- file in which the master Ip's must be given to get the minion connect to the master and also an id to identify the minion.
+
+salt-key -L -- to list all the keys available and also list the unaccepted keys by the master.
+ 
+salt-key -A -- to accept all keys available.
+
+salt '*' test.ping -- to test the pinging of the minion from master. * means all minions.
+
+Access control system -- provides option for user or group to execute a task with permission. It has three types:
+
+publisher ACL
+External auth system
+peer system.
+
+Publisher ACL -- allows access to users other that root to execute salt commands on minion. its configured in master configuration.
+
+External Auth --- provide access to execute salt commands through external authorization system like PAM,LDAP etc.
+
+Salt also provides option -a to provide external authentication. Salt server will ask for authentication
+
+To restrict the salt server from asking it use -T option. It caches authentication for the next 12 hrs and use it to provide authentication to users.
+
+Minions can pass commands usings Peer interface Its configured in Master configuration that allows minion the send coommunication from the master using the perr communication or allow the minion to execute runners from the master using peer_run configuration.
+
+salt-call publish.publish \* test.ping --- to test ping on all nodes using publish.publish module. This is done on the minions not on Server.Connects using tcp port 5406
+
+Salt has a directory called CacheDir in which Minion maintain a direcotry called proc directory.Minion maintain all files for the jobs running on the minions.
+
+Jobs -- nothing but script or commands that are executed from Master on minions.
+
+Scheduling system --- exposes the execution of the funtion on minion or any runner on the master. Performed by three methods,
+
+Schedule --- Either on master or minion config file
+minion pillar data -- refreshes the minion pillar data using saltutil.refresh_pillar command
+schedule state or schedule module.. 
+
+Salt formulas -- packed and distributed to salt masters
+
+/srv/salt -- this is the path where we write formulas in sls format. if there is no folder called salt, create one. we define this path in our master file under base location.
+
+salt '<nodename>' state.sls <formula filename> -- to apply the formula on the node eg: salt 'min1' state.ss websetup
+
+Highstate -- its a way for a salt to determine which formulas have to be applied for the node. we need to have a top.sls file in our /src/salt which highstate would refer to. Here the formulas are included in the top.sls and define the node where the formula has to be applied and the formula to apply
+
+salt 'min1'state.highstate -- to apply a high state on the node.
+
+Salt logging -- used to track the running software events.
+
+/var/log/salt/master -- master's log file 
+
+------------------------------------------------------------------
+
+Jenkins:
+
+Its a continuous intengration and continous delivery of Projects regardless of the platofrm you are working.
+
+Ci is a developement proctice that require developers to share their code in repository in regular of time. it requires the developers to have frequesnt build. Common practise is that a code is commit, a build is triggered.
+
+Jenkins is based on Dirtributed. It has 2 components. 
+Jenkins server and Jenkins Node?slave/build server.
+
+Master's job is to handle scheduling build jobs dispatching buildsto slaves, In a distributed architecture a master instance can also execute build jobs. Slaes dont have a full installation of Jenkins. its only job is to build the code and send report back to the master.
+
+Jenkins by default runs on port 8080.
+
+mvn --version -- to get the Maven version
+
+Whenever we setup jenkins we first setup users. To create a new user go to manage jenkins and Click on users to create a new one.
+
+Manage jenkins --> Global tool configuration --> its where we define jenkins where to take the installers from.Here we define the JDK's also
+
+/var/lib/jenkins --- Home directory of jenkins. For any project, Jenkins will create a sub directory.
+
+Global security ---> Here we give the authentication and authorization for the users.
+
+Jenkins also lets u set up our own LDAP server for authentication.
+
+Under authotrization legacy mode means -- only Admin can du anything others can only view.
+
+Matrix based security -- giving users specific roles and permissions on what they can do. Same could be done for Project based security.
+
+The Job of jenkins is to bring to gether our tools together. Its like a middle man. its purpose is to enable run of the other tools.Its job is to trigger the commands in other build tools.
+
+To do the handshake with other tools, Jenkins will have a small script called plugins
+
+Mange plugins --- Here we can download the required plugins needed for the other tools to be configured in jenkins.
+
+Manage Nodes --- Here we configure the master slave for jenkins. We add a node, manage nodes etc.Here we need to specify now the slave has to connect to the master.
+
+Manage data --- to check the old pipeline data 
+
+Projects in jenkins:
+
+Freestyle Project -- its just a activity that needs to be done on one build tool. its flexible for simple, complex projects.
+
+Pipeline -- here multiple projects get connected to make as a pipeline 
+
+Multi configuration -- Here multiple code branches are used in which one branch is for buld and other is for build , test etc so it becomes a Multi configuration project.
+
+Multibrnach pipeline---  Here multiple forks of pipeline is created so that if one branch fails other needs to be triggered. 
+
+All the above could be done on a Freestyle Project. Its a most flexibe one.
+
+under new build page.. anywhere we see build, it means Jenkins tells about the run of the project not the actual software build.
+
+Pipeline -- Nothing but Jenkins project linked to each other to auto trigger one another.
+
+Upstream project --- anything thats above the current project is called upstream project
+
+Downstream project --- anything thats below the current project is called downstream project.
+
+ABC---> NEW : here ABC has one downstream project and no upstream project and NEW has one upstream project and no downstream project
+
+Webhooks -- programs that enable two tools to talk to each other. it does not need to have an API. Purpose of webhooks is to make all tools are in sync.
+
+jenkins creates a workspace folder under /var/lib/jenkins with the job name which we give and it downloads all the code in it to compile.
+
+Build triggers -- this is the path under which we build the pipeline when we define a freestyle project.
+
+Build after other projects are build --- This is the place where we mention the pipeline flow, means which project must build after what.
+
+Build Pipeline --- its the plugin that allows to build a pipeline project.
+
+------------------------------------------------------------------
+
+Docker Swarm:
+
+Swarm is a clustering of Docker. it turns several Docker hosts into a single Virtual docker host. The swarm is controlled by swarm master. Each docker node communicates with the master.
+
+docker swarm init ---- to initalize a swarm. once initialized the machine becomes the swarm manager. If any node needs to join the swarm it has to use the join token obtainer during init command.
+
+docker service ls -- to list the containers running in the swarm.
+
+A service is nothing but a container running in either swarm or compose.multiple copies of services can be run. The swarm manager replicates the service on other nodes in the swarm.
+
+docker node ls --- to list the nodes available in docker swarm including the master.
+
+Port 2377 is the port which will allow the manager to connect to the node
+
+docker service create --replicas <number> --name <name of the container> <image> <command> --- this command is used to create a service in the docker swarm.
+
+docker service rm <service name> --- to remove the service created.
+
+docker service inspect --pretty <container name> -- to inspect the container created.
+
+docker service scale <container name>=2 -- to scale up the container by 2. it starts two containers/replicas of the container.
+
+docker service ps <container name> --- to show which container is running on which machine.
+
+docker service create --replicas <number> --name <name of the container> --update-delay <time in seconds> image name --- here the update delay option is given to delay the startup of the containers.
+
+docker service update --image <new image> <name of the container> --- to update the containers with the new image. It does not need us to stop and start.
+
+you can use a docker stack deploy to deploy a complete stack application when running in swarm.
+
+docker swarm leave -- force -- to remove from the swarm network.
+
+Docker node ls ---- to list the nods connected to the swarm manager
+
+docker service create --replicas 1 --name helloworld alpine ping docker.com -- to create an image and replicate as needed. Here 1 is given so only one image is created
+
+docker service inspect --pretty helloworld --- to inspect the image created
+
+docker service scale helloworld=2 --- to increase the replica of the containers. IF you give this, the container will replicate with how many numbers you give
+
+docker service ps redis -- to find out where the replicas are running
+
+docker service ls -- to list the containers running in Swarm and the no of replicas
+
+docker service create --name reg --publish 5000:5000 registry:2 --- to create a registry
+
+docker service create --replicas 3 --name redis --update-delay 10s redis:3.0.6 --- to start a container with a delay time
+
+docker service update --image redis:3.0.7 redis --- to update an existing container with a new image
+
+docker stack services stackdemo ---- to start the service stackdemo( i hope lets check it tomorrow)
+
+docker stack rm stackdemo/ docker service rm reg(this is the one to remove) --- to remove the service( i dont think)
+
+docker swarm leave --force --- to make the manager leave the swarm
+
+--------------------------------------------------------------
+
+Kubernetes:
+
+Kubernetes is a container management technology designed by google labs. Hosted by cloud native computing foundation. Its also called as K8. First version was released on 21st July 2015
+
+Benefits:
+Continuous developement and integration
+Contaierised infrastartucture
+application centric mnagement
+Auto scale infrastructure
+Environment consistency
+Loosly coupled infrastructure
+Higher density of resource utilization
+Predictable infrastructure.
+
+Kubernetes aslo follow Client server architecture. The nodes are bootstraped to the Kubernetes master.
+
+components of master:
+
+etcd -- basically stores the config information which each node uses
+
+API server -- kubernestes API
+
+Controller manager -- regulaytes and maintains the state of the cluster. To find out if the node is running fine and how many conttainers are running in node.
+
+Scheduler --- Manages the containers running in the nodes and also the node. if any node or container fails then its scheduler job to spin a new container or move the containers to a new one if the node fails.
+
+Components of Node:
+
+Docker -- this must run by default
+
+Kubelet: -- service which is essentially sends the information back to the kuberneters master from the node like no of users connected to the container.this is to interact with the kubernetes API
+
+Kubernetes proxy service --essentially for networking and load balancing between the clusters.
+
+kubectl get pods --- to get the list of kubernetes service running.
+
+minikube --- local developement experience of kubernetes. usually in developement environment.
+
+when kubernetes try to run a container it becomes a pod. like services in swarm, here containers are called as pods.it could be a cluster of containers.
+
+kubectl create -f <image name> --- to pull the image and create a container.
+
+kubectl log <imagename> --- to fetch the log.
+
+Kubernetes job -- the main function of a job is to create one or more pod and tracks about the success of the pods. it ensures that the specified number of pods are running successfully. When the desired number is completed, the job is completed. you can create a job in a yaml fle also.
+
+kubectl describe jobs -- to check the status of the jobs.
+
+cronetes --- scheduled jobs are called cronetes. any scheduled job will run a pod at a specified point in time. 
+
+kubectl describe pods <pod name> --- to describe about the pods running.
+
+Every Pod will have some events associated with it to know what needs to be done if there is any issue.
+
+kubectl run guids --image=<image name> --port 9000 --replicas=2 --labels="any version info" --- command to run a pod from an image using an label and replicas
+
+kubectl exec -t -i <podname> <command> -- to execute some commands on the pod
+
+kubectl get nodes --- to get the nodes running in kubernetes
+
+kubectl get deployments -- to get the deployments on the master
+
+kubectl get services --- to list the services running on the master.
+
+kubectl delete deployment/<deployment name> -- to delete the deployments.
+
+kubectl apply -f <yamlflie> -- to apply the Yaml file created to get started a pod.
+
+kubectl delete pods/<podname> --- to delete a pod
+
+kubectl describe jobs <jobname> -- to describe about the job
+
+kubectl describe pods <podname> -- to describe a pod
+
+kubectl get pods -w --- like tail -f command. This is for a sequence of the job in which the pods are created.
+
+labels --- they are key-value pair that could be attached to the pods. they are to identify the attributes to the pods.
+
+Selectors --essentialy used for grouping. Selectors are used to identify a specific value in pod and list them
+
+Namespace -- provide an additional qualification to a resource name. It acts as a virtual wall between multiple cluster. it helps in Pod to Pod communication using the same namespace. These are virtual clusters that sit on the same physical cluser.
+
+Node controller -- collection of services that run in Kubernetes master and continously monitor the node in the cluster.If all the services are runnint then the node is validated and a newly created pod will be assinged. if not then the master will not assign any Pod to it.Master will register the node automatically if the -register-node flag is true
+
+Service -- Logical set of Pods. it makes easy for the pods to scale easily.It provides a single IP address by which pods could be accessed. its easy to manage Load balancing 
+
+Replication controller --- keyfeature of kubernetes that manage the POd life cycle.. responsibel to make sure that specifed number of pods at anytime. 
+
+replica set -- ensures how many replica of pod shoould be running. Controller job is to run 5 pod at a time and replica set is to ensure that 5 is running at any given time. if anything dies then replicvca set will trigger the controller to spin a new pod.
+
+Deployment -- higher version of replication controller.it will show in the name as we defined in our Yaml file which we used to create a container
+
+kubectl label deployment <podname> "value" -- to add an additional label value
+
+kubectl get pods --selector="ver=2" -- here it lists the pods which have the label value defined as ver=2
+
+kubectl get deployment --selector="value" --- to list in the same way as above
+
+kubectl expose deployment <podname> -- to expose a pod. Before then starting a pod the parameter --port has to be defined with the port number.
+
+kubectl delete service <podname> --- to delete a serivce/pod running
+
+kubectl create service <service name> <pod name> --tcp=80:8888 -- to create a service.
+
+kubectl get svc <service name> ---to get the service created.
+
+Autoscaling -- keyfeature of Kubernetes. Cluster is capable of increasing the number of nodes as the demand for the service increases and decrease as the requirement decreases
+
+kubectl scale rs <replicaset> --replicas=4 -- to scale up the pod
+created. Here rs must be given to specify the replicaset.
+
+kubectl autoscale rs <replicaset> --min=2 --max=5 --cpu-percent=80 -- this will do a horizontal scaling with the required parameters. inshort thisis called as hpa.
+
+kubectl get hpa ---to get list of horizontal scaling.
+

@@ -1,0 +1,35 @@
+172.31.18.195 ansible.test.org
+172.31.24.160 node.test.org
+
+
+sudo yum install -y ansible
+ To login type su test --login
+
+
+---
+- hosts: all
+  remote_user: test
+  tasks:
+  - name: Ensure HTTPd package is installed
+    yum:
+      name: httpd
+      state: present
+    become: True
+  - name: Ensure HTTPd servie is enabled and runnning
+    service:
+      name: httpd
+      state: started
+      enabled: True
+    become: True
+
+
+---
+- hosts: all
+  remote_user: test
+  tasks:
+  - name: Set variable 'name'
+    set_fact:
+      name: Test MACHINE
+  - name: Print variable 'name'
+    debug:
+      msg: '{{ name }}'

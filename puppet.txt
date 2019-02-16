@@ -1,0 +1,10 @@
+  case $my_variable {
+    'One': {
+      notify {'The value of My Variable is One': }
+    }
+    'Two': {
+      notify {'The value of My Variable is Two': }
+    }
+    default: {
+      notify {"The value of My Variable is $my_variable": }
+    }
