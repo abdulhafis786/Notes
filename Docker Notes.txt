@@ -1,0 +1,161 @@
+docker run -d --name redisDynamic -p 6379 redis:latest --- to specify a port for your container. This will pick a random port number from the host to the container.To find the actual port number that is exposed, we use docker ps.
+
+docker port redisDynamic 6379 -- to find the actual port that is being mapped to the container.
+
+docker ps -q ---- to list all the container ID's
+
+docker search redis --- to find the list of sources from where the image can be found and used
+
+docker build -t mywebimage:v1 . --- to build the image using Dockerfile
+
+docker run -d --name my-production-running-app -e NODE_ENV=production -p 3000:3000 my-nodejs-app -- running the image with the -e environment variable
+
+docker run password ls /app -- this will just list the contents of the image and would not start it. Giving the option -d or -it would start the container
+
+docker create -v /config --name dataContainer busybox -- to create a image locally.. this will pull the image from the dockerhub repo and build one. -v is given to specify the volume or the storage
+
+docker run --volumes-from dataContainer ubuntu ls /config --- the option volumes-from is given to reference the volume or storage from one container to another. Here the storage of datacontainer is mapped to ubuntu and referred from.
+
+docker export dataContainer > dataContainer.tar -- to export a container to another.
+
+docker import dataContainer.tar --- to import the container into the host
+
+docker run --link redis-server:redis alpine env --- this command is to link one container to another. Here redis container is getting linked with alpine. The env is given to get the information of the environemtn of the linked container. here Alpine is getting the info from redis
+
+docker network create backend-network -- to create a  network in docker
+
+docker run -d --name=redis --net=backend-network redis --- to assign a network to the container 
+
+docker run --net=backend-network alpine cat /etc/resolv.conf --- Docker assings the IP for the container with its own embedded DNS server. It has the IP 127.0.0.11 under resolve.conf to assign the IP'search
+
+docker network connect frontend-network redis -- to connect to a new created network with an existing container
+
+docker network connect --alias db frontend-network2 redis -- this is a method to give alias to the Network under which a container is connected. Here The frontend network is given an Alias of Db when its connected to redis container.
+
+docker run --net=frontend-network2 alpine ping -c1 db --- Here we dont have to specify the container name. Just giving the alias would help to connect the server via the assigned network
+
+docker network disconnect frontend-network redis --- to disconnect a container from a particular network
+
+docker run  -v /docker/redis-data:/data \
+  --name r1 -d redis \
+  redis-server --appendonly yes -- this command is used to create a data volume which says that any data written under /data under the redis container will be writted to the /docker/redis-data under the host machine so that even when the container is destroyed, data will still be present.
+
+docker run  -v /docker/redis-data:/backup ubuntu ls /backup --- The same volume could be mapped to the other container as well.
+
+docker run --volumes-from r1 -it ubuntu ls /data --This option is used so that one container can use the data of the other container irrespective of the storage where the data is getting stored
+
+docker run -v /docker/redis-data:/data:ro -it ubuntu rm -rf /data --- this is given to make the data in a readonly mode so any attempt to make the data removal will result in error
+
+docker logs redis-server ---- to check the logs of a particular container. here its redis-server
+
+docker run -d --name redis-syslog --log-driver=syslog redis ---- to redirect the Container logs to the syslog server. redis-syslog is the syslog Container created for this purpose.
+
+docker run -d --name redis-none --log-driver=none redis ---- to disable logging happening for the container. 
+
+To check which type of logging is happening on the container use docker inspect command as below,
+
+docker inspect --format '{{ .HostConfig.LogConfig }}' redis-server --- this must be given along with the container name
+
+docker run -d --name restart-3 --restart=on-failure:3 scrapbook/docker-restart-example --- this command will try to restart the container the no of times specified before bringing it down
+
+docker run -d --name restart-always --restart=always scrapbook/docker-restart-example ---- to restart always the failed container
+
+docker stats nginx  --- to get the statistics of the container nginx
+
+docker ps -q | xargs docker stats -- to get the statistics of all the running containers
+
+docker ps --format '{{.Names}} container is using {{.Image}} image' -- this is used to get the output to show what container is using what image
+
+docker ps --format 'table {{.Names}}\t{{.Image}}' --- to show in a table format
+
+docker ps -q | xargs docker inspect --format '{{ .Id }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}' -- here the docker ps output is given as the input to the docker inspect command which displays the container name , ID along with the IP address.
+
+docker swarm init --- to initiate a swarm. Here the first node where this command is given becomes the swarm manager. It then generates the token with which u can make other nodes to join the swarm manager. The token which is generated must be always be used to initiate any node into master
+
+docker swarm join-token -q worker --- command to get the token to add a node as a worker.
+
+docker swarm join --token SWMTKN-1-16r5tw2kaka7clc551yue6f72e3w6weltf6xi71o6scz3gqv7y-7zkq3lqtit0f96lqi0dx3g5qh 172.17.0.2:2377 --- this is used to add a node as worker in swarm
+
+docker service create --name http --network skynet --replicas 2 -p 80:80 katacoda/docker-http-server -- To create a service. Here in swarm mode service is nothing but the containers running.
+
+docker service ps http --- to inspect the service http running on the server
+
+docker service inspect --pretty http -- to inspect a service running in a detailed way
+
+docker service scale http=5 --- to scale the service. Here swarm mamaner will decide how many containers have to be run in each node. To scale down just give a lower number than the original
+
+docker info -- to get the information of the docker running in the host
+
+docker ps --- to list all the running container
+
+docker ps -a --- to list all container even in stopped state
+
+docker rm <containername> -- this will remove the container created
+
+docker run --name=Ubuntu -it ubuntu /bin/bash --- to start a container with  a name. Anytime u start a container you give the command to be executed as part of it.
+
+docker start <containername> --- to start an exited container
+
+docker attach <containername> --- to log in into the container
+
+docker logs Ubuntu --- to list the logs of the container Ubuntu
+
+docker top Ubuntu --- to check the process status of the container
+
+docker stop Ubuntu --- to stop a container running
+
+docker inspect --format='{{.Config.Env}}' Ubuntu ---- to inspect a particular parameter of that container. Note that the . has to be given before any configuration thats output is needed. Wile doing the inspect seperately for the container, it will list the number of parameters. to call any one of the parameter you have to mention with the . at the beginning
+
+docker pull fedora --- to pull a image to our local repository
+
+docker search puppet --- to search for a particular image in Docker. This will list all the images available along with the star ratings as such
+
+docker login ----- to log in into the docker account
+
+docker ps -l -q --- to find the container ID of the last created image
+
+docker commit 8651ed1d1b0e abdulhafis786/apache2 -- to commit the changes made to our container. Here I have created a ubuntu container with apache installed in it
+
+docker tag 3e61beca3c79 abdulhafis786/ubuntu:apache2 --- before pushing you have to set a tag to your image created.
+
+docker push abdulhafis786/ubuntu:apache2 ---- to push to your repository
+
+docker build -t="abdulhafis786/ubuntu:nginx" . --- to build an image using a docker file. make sure you create a docker file and then initiate this command. If there is any error in the build, you can always login into the container ID of the last successful build of the dockerfile in the previous step and do a debugging to see where it went wrong.
+Then running the command back will take the previous steps from cache. if you dont want the cache to be present then give --no-cache in the command
+
+docker history 16508e5c265d(image id) ---- to show the list of steps how the image was build
+
+docker port 59a0041249e1 80 --- to show which port is mapped to this container. here 80 is the port number we gave during docker run command
+
+docker top db ---- to get the PID of the Container
+
+docker run -p 5000:5000 registry --- to run our own private registry.
+
+docker tag <image id> docker.example.com:5000/imagename ---- We have to first tag our image to the image id before pushing to the private repository.
+
+docker push docker.example.com:5000/imagename -- to push the image to the private repository
+
+docker run -it docker.example.com/imagename --- to run the container from the private repository
+
+docker swarm --help -- to list out the options to be used as swarm
+
+docker swarm init -- to initialize the docker mode
+
+docker swarm join-token worker --- this will list the Token ID with which u can join in a swarm
+
+docker network create -d overlay skynet -- to create a overlay network. This is the network that docker uses to communicate between different containers
+
+docker service create --name http --network skynet --replicas 2 -p 80:80 katacoda/docker-http-serve ---- to create a service in docker swarm and map it to the network
+
+docker service ls -- to list the running service in the docker swarm. Will work only from the manager.A new concept of Services is used to run containers across the cluster. This is a higher-level concept than containers. A service allows you to define how applications should be deployed at scale. By updating the service, Docker updates the container required in a managed way.
+
+docker service inspect --pretty http --- to inspect the docker service running in the cluster
+
+docker node ps self --- to check which container is running in the manager. This command will work only in the manager
+
+docker service scale http=5 -- to scale up a service running. To scale down just reduce the value and use the same command
+
+Overlay networks are the one which help in communicating between different containers using VxLAN technology of Linux kernel.(Extensible VLAN)
+
+docker network ls -- to list the number of networks present. The newly created network would not be visible in the worker Node when you execute the same command
+
