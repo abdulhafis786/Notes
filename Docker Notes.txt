@@ -159,3 +159,26 @@ Overlay networks are the one which help in communicating between different conta
 
 docker network ls -- to list the number of networks present. The newly created network would not be visible in the worker Node when you execute the same command
 
+docker ps -n 1 --- to show the number of containers that has been stopped. 1 indicates the number whivh is given.
+
+docker inspect --format '{{.RestartCount}}' competent_golick -- to get only that particular value. if it has attributes nested inside then it would be like the below,
+
+sudo docker inspect --format='{{ .State.Running }}' competent_golick
+
+/var/lib/docker/ -- main directory for the docker file
+
+docker search puppet --- to search for an image in docker hub.
+
+sudo docker build -t="jamtur01/static_web:v1" dur01/docker-static_web -- to build from the git repository.
+
+sudo docker build --no-cache -t="jamtur01/static_web" . -- to skip the cache and build the image from docker file
+
+ENV REFRESHED_AT 2014-07-01 -- including this in docker file will refresh (in specific package update) when the same buildfile is used 
+
+docker history e672cedc56db -- to show the history in which the image was build
+
+sudo docker port 6751b94bb5c0 80 --- to see which real port is mapped to the container
+
+sudo docker run -d -P --name static_web jamtur01/static_web nginx -g "daemon off;" -- to expose any port that was defined in expose command in Dockerfile.
+
+sudo docker run -d -p 80 --name website -v $PWD/website:/var/www/html/website abdulhafis786/ubuntu:nginx
