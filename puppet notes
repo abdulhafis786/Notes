@@ -1,0 +1,91 @@
+https://github.com/jorhett/learning-puppet4 --- puppet code in github
+
+Commands to remove a package in ubuntu
+
+       apt-get remove puppet
+   30  apt-get list
+   34  apt-get purge puppet
+   35  apt-get autoremove
+   36  apt-get clean
+
+puppet cert list --all --- to list all the certs in the puppet master
+
+***********************************************************
+root@agent:/var/lib/puppet/ssl# puppet agent -t
+Warning: Unable to fetch my node definition, but the agent run will continue:
+Warning: Server hostname 'puppet.test.org' did not match server certificate; expected one of puppet.ap-south-1.compute.internal, DNS:puppet, DNS:puppet.ap-south-1.compute.internal
+Info: Retrieving plugin
+Error: /File[/var/lib/puppet/lib]: Failed to generate additional resources using 'eval_generate': Server hostname 'puppet.test.org' did not match server certificate; expected one of puppet.ap-south-1.compute.internal, DNS:puppet, DNS:puppet.ap-south-1.compute.internal
+Error: /File[/var/lib/puppet/lib]: Could not evaluate: Server hostname 'puppet.test.org' did not match server certificate; expected one of puppet.ap-south-1.compute.internal, DNS:puppet, DNS:puppet.ap-south-1.compute.internal Could not retrieve file metadata for puppet://puppet.test.org/plugins: Server hostname 'puppet.test.org' did not match server certificate; expected one of puppet.ap-south-1.compute.internal, DNS:puppet, DNS:puppet.ap-south-1.compute.internal
+Error: Could not retrieve catalog from remote server: Server hostname 'puppet.test.org' did not match server certificate; expected one of puppet.ap-south-1.compute.internal, DNS:puppet, DNS:puppet.ap-south-1.compute.internal
+Warning: Not using cache on failed catalog
+Error: Could not retrieve catalog; skipping run
+Error: Could not send report: Server hostname 'puppet.test.org' did not match server certificate; expected one of puppet.ap-south-1.compute.internal, DNS:puppet, DNS:puppet.ap-south-1.compute.internal
+
+
+I hope for this error we have to generate a new cert
+
+puppet cert generate <puppet master's certname> --dns_alt_names=<comma-separated list of DNS names>
+
+Additional note: Before running puppet cert generate, remove the .pem files for the puppet master in /var/lib/puppet/ssl/private_keys, /var/lib/puppet/ssl/ca/signed/ and /var/lib/puppet/ssl/certs. Generating a new certificate is not killing connectivity to existing clients, as they verify the certificate of the puppetmaster using the CA's certificate, which they downloaded at first connect
+
+Issue seems to be due to the puppet cert DNS name mismatch. I gave the below in master puppet.conf and it worked 
+
+dns_alt_names=puppet.test.org
+
+*******************************************************************
+
+puppet resource user -- this is a resource command which will list the format in which the user has to be declared in puppet.
+
+facter operatingsystem --- get the facter value from the server
+
+puppet apply --noop /vagrant/manifests/tmp-testfile.pp -- to check what would change without actually applying the change.
+
+file { '/etc/hosts':
+audit => 'all',
+}
+
+here audit resource type is used to know what changes have been made on a particular file. Usually 'all' is used.
+
+puppet module list --- to list the modules present in the puppet server
+
+puppet module install puppetlabs-apache -- to download the module from the puppet forge. Always have to provide the exact name for the module.
+
+puppet module generate do-wordpress --skip-interview --- this is to generate a new module. --skip-interview is used to skip the interactive questions that are given while creating a module.
+
+puppet module generate apache-test --- to generate a new module but in some version of puppet it does not create a new metadata.json which is important. so in that case we have to build the module 
+
+puppet module build apache-test -- this will build the module and createa metadata.json file as well,
+
+puppet module install abdulhafis786-lamp.1.0.1-tar-gz --ignore-depedencies ---- to install a module locally. this is done to install it as a local module
+
+puppet module uninstall abdulhafis786-lamp -- to uninstall a module
+
+hiera -c hiera.yaml sshservicename osfamily=RedHat -- to test if the defined value in hiera.yaml amd the respective Os family yaml are correct.
+
+puppet apply packagetag.pp --skip_tags service -- to skip a tag value. Tags are nothing but puppet generated service values that could be used to apply only a part of code.
+
+puppet apply packagetag.pp --tags service -- this will apply only the service resource in the pp file.
+
+
+
+----------------------------------------------------
+
+To connect the agent on a new puppet master
+
+on the master/ca server you need to run:
+
+puppet cert clean client-certname
+
+on the client rm -rf /var/lib/puppet/ssl
+
+then on the client:
+
+puppet agent --server servername --waitforcert 60
+
+if you dont have autosign enabled then on the server run puppet cert sign certname..Then from the agent run puppet agent -t
+
+To test if the agent os able to connect with the master telnet <puppet master IP> 8140
+
+
+https://github.com/puppetlabs/docs-archive/blob/master/hiera/1/complete_example.markdown -- to check further 
