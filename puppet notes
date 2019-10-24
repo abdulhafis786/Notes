@@ -67,7 +67,7 @@ puppet apply packagetag.pp --skip_tags service -- to skip a tag value. Tags are 
 
 puppet apply packagetag.pp --tags service -- this will apply only the service resource in the pp file.
 
-
+puppet master --configprint all | grep environment --- to check the environment and module path
 
 ----------------------------------------------------
 
