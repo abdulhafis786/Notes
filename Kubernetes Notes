@@ -1,0 +1,49 @@
+Minikube is a single instance of Kubernetes cluster 
+
+minikube version -- to get the Version of Minikube 
+
+minikube start --wait=false -- to start the minikube 
+
+minikube is a Single instance cluster. To INteract with it we need to have commands executed via kubectl.
+
+kubectl cluster-info -- to get the info about the cluster.
+
+kubectl get nodes -- To get the nodes runnning in the cluster.
+
+The flow of Kubernetes is as Cluster -> Nodes -> Pods -> Containers. A node may be a physical or virtual Machine which could 
+contain multiple pods and each pod may contain multiple container depending on the input given.
+
+kubectl create deployment first-deployment --image=katacoda/docker-http-server --- This will create a first deployment on the cluster.
+
+kubectl get pods -- to get the number of pods running.
+
+kubectl expose deployment first-deployment --port=80 --type=NodePort - this is to expose the deployment whihc was done on the cluster.
+Node port option is given to assign Dynamic port on the system.
+
+kubectl get svc first-deployment -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}' -- To get the port number of the Deployment done.
+
+kubectl get svc first-deployment -- This will give the Details of the first-deployment done.Here first deployment is the name .
+
+minikube addons enable dashboard --- To enable the addon for the dashboard. 
+
+kubectl apply -f /opt/kubernetes-dashboard.yaml -- To apply the dashboard. the contenst of the yaml file is below,
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kubernetes-dashboard
+  name: kubernetes-dashboard-katacoda
+  namespace: kube-system
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 9090
+    nodePort: 30000
+  selector:
+    app: kubernetes-dashboard
+  type: NodePort
+
+kubectl get pods -n kube-system  -w -- to show the pods associated with the kube-system which is the dashboard.
+
