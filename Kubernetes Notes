@@ -47,3 +47,24 @@ spec:
 
 kubectl get pods -n kube-system  -w -- to show the pods associated with the kube-system which is the dashboard.
 
+If to run multiple cluster, we start with Kubeadm
+
+kubeadm version -o short --- To get the version of kubeadm
+
+kubeadm init --token=102952.1a7dd4cc8d1f4cc5 --kubernetes-version $(kubeadm version -o short) -- to initialize the kubeadm.
+In Production the Token option is not needed as kubeadm will generate one for us.
+
+The Container Network Interface (CNI) defines how the different nodes and their workloads should communicate
+More information can be obtained at https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+kubectl apply -f /opt/weave-kube --- here weave-kube is applied as container network interface.
+
+kubeadm token list -- to list the tokens availabe in the master. This is used so that other members could join the master.
+
+kubeadm join --discovery-token-unsafe-skip-ca-verification --token=102952.1a7dd4cc8d1f4cc5 172.17.0.47:6443 ->
+This is for the node to join the master using the token generated from the master.
+
+The --discovery-token-unsafe-skip-ca-verification tag is used to bypass the Discovery Token verification. As this token is generated dynamically, we couldn't include it within the steps. 
+
+
+
