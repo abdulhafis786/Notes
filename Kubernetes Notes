@@ -96,4 +96,371 @@ bb3ae1928210        k8s.gcr.io/pause:3.1          "/pause"                 About
 
 kubectl scale --replicas=3 deployment http -- to scale the replicas created for the deployment. Replicas are nothing but the images
 
+kubectl create -f deployment.yaml -- to create a deployment using an Yaml file. here all the necessary information is given in the
+file and the deployment is run.
+
+******REF******
+Example Yaml file is as below:
+apiVersion: extensions/v1beta1
+kind: Deployment #refers to the kind of activity done by K8. There are may types like Pod,service etc
+metadata:
+  name: webapp1 #Name of the container 
+spec:
+  replicas: 1 #Number of replicas needed
+  template:
+    metadata:
+      labels:
+        app: webapp1 #Here label is mentioned cos multiple images of the same label can be clustered together
+    spec:
+      containers:
+      - name: webapp1
+        image: katacoda/docker-http-server:latest #Image from which the container could be created
+        ports:
+        - containerPort: 80 # exposing port 
+        
+Exaple of a service Yaml file:
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-svc #name of the service
+  labels:
+    app: webapp1
+spec:
+  type: NodePort #Type of service 
+  ports:
+  - port: 80  #Container port 
+    nodePort: 30080 #Exposed port 
+  selector:
+    app: webapp1 #App for which the service is to be enabled.
+    
+******REF******
+kubectl apply -f deployment.yaml --- when there is a change in any value defined under deployment.yaml file apply command must be given.
+
+kubectl cluster-info ---  to get the info on kubernetes master and the DNS 
+
+kubectl get rc -- command to get the replication controller 
+
+******REF******
+The replication controller defines how many instances should be running, the Docker Image to use, and a name to identify the service. 
+Additional options can be utilized for configuration and discovery.If a container were to go down, the replication controller would restart it on an active node
+
+A Kubernetes service is a named load balancer that proxies traffic to one or more containers. 
+The proxy works even if the containers are on different nodes.
+
+Services proxy communicate within the cluster and rarely expose ports to an outside interface.
+
+When you launch a service it looks like you cannot connect using curl or netcat unless you start it as part of Kubernetes. 
+The recommended approach is to have a LoadBalancer service to handle external communications.
+
+******REF******
+******REF******
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: redis-master
+  labels:
+    name: redis-master
+spec:
+  replicas: 1
+  selector:
+    name: redis-master
+  template:
+    metadata:
+      labels:
+        name: redis-master
+    spec:
+      containers:
+      - name: master
+        image: redis:3.0.7-alpine
+        ports:
+        - containerPort: 6379
+ 
+ apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master
+  labels:
+    name: redis-master
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 6379
+    targetPort: 6379
+  selector:
+    name: redis-master
+    
+ apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: redis-slave
+  labels:
+    name: redis-slave
+spec:
+  replicas: 2
+  selector:
+    name: redis-slave
+  template:
+    metadata:
+      labels:
+        name: redis-slave
+    spec:
+      containers:
+      - name: worker
+        image: gcr.io/google_samples/gb-redisslave:v1
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+          # If your cluster config does not include a dns service, then to
+          # instead access an environment variable to find the master
+          # service's host, comment out the 'value: dns' line above, and
+          # uncomment the line below.
+          # value: env
+        ports:
+        - containerPort: 6379
+        
+  apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave
+  labels:
+    name: redis-slave
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 6379
+  selector:
+    name: redis-slave
+    
+ apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: frontend
+  labels:
+    name: frontend
+spec:
+  replicas: 3
+  selector:
+    name: frontend
+  template:
+    metadata:
+      labels:
+        name: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+          # If your cluster config does not include a dns service, then to
+          # instead access environment variables to find service host
+          # info, comment out the 'value: dns' line above, and uncomment the
+          # line below.
+          # value: env
+        ports:
+        - containerPort: 80
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    name: frontend
+spec:
+  # if your cluster supports it, uncomment the following to automatically create
+  # an external load-balanced IP for the frontend service.
+  # type: LoadBalancer
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 80
+      nodePort: 30080
+  selector:
+    name: frontend
+
+******REF******
+******REF******
+
+Cluster IP is the default approach when creating a Kubernetes Service. 
+The service is allocated an internal IP that other components can use to access the pods.
+
+By having a single IP address it enables the service to be load balanced across multiple Pods
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-clusterip-svc
+  labels:
+    app: webapp1-clusterip
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: webapp1-clusterip
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-clusterip-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-clusterip
+    spec:
+      containers:
+      - name: webapp1-clusterip-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+******REF******
+
+kubectl describe svc/webapp1-clusterip-svc -- to describe a particular service.
+
+kubectl get pods -n kube-system -- to get the detail of a specific pod.
+
+******REF******
+
+Target ports allows us to separate the port the service is available on from the port the application is listening on. 
+TargetPort is the Port which the application is configured to listen on. 
+Port is how the application will be accessed from the outside.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-clusterip-targetport-svc
+  labels:
+    app: webapp1-clusterip-targetport
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+  selector:
+    app: webapp1-clusterip-targetport
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-clusterip-targetport-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-clusterip-targetport
+    spec:
+      containers:
+      - name: webapp1-clusterip-targetport-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+
+While TargetPort and ClusterIP make it available to inside the cluster, the NodePort exposes the service on each Node’s IP via the defined static port. 
+No matter which Node within the cluster is accessed, the service will be reachable based on the port number defined.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-nodeport-svc
+  labels:
+    app: webapp1-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30080
+  selector:
+    app: webapp1-nodeport
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-nodeport-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-nodeport
+    spec:
+      containers:
+      - name: webapp1-nodeport-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+
+The service can now be reached via the Node's IP address on the NodePort defined.
+
+curl 172.17.0.25:30080 -- Here the IP given is the machine's IP.
+
+Another approach to making a service available outside of the cluster is via External IP addresses.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-externalip-svc
+  labels:
+    app: webapp1-externalip
+spec:
+  ports:
+  - port: 80
+  externalIPs:
+  - 172.17.0.25
+  selector:
+    app: webapp1-externalip
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-externalip-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-externalip
+    spec:
+      containers:
+      - name: webapp1-externalip-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-loadbalancer-svc
+  labels:
+    app: webapp1-loadbalancer
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: webapp1-loadbalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-loadbalancer-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-loadbalancer
+    spec:
+      containers:
+      - name: webapp1-loadbalancer-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+
 
