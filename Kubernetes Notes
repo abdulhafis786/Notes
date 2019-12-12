@@ -463,4 +463,127 @@ spec:
         - containerPort: 80
 ---
 
+******REF******
 
+Kubernetes have advanced networking capabilities that allow Pods and Services to communicate inside the cluster's network. 
+
+An Ingress enables inbound connections to the cluster, allowing external traffic to reach the correct Pod.
+
+Ingress enables externally-reachable urls, load balance traffic, terminate SSL, offer name based virtual hosting for a Kubernetes cluster.
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp1
+    spec:
+      containers:
+      - name: webapp1
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp2
+    spec:
+      containers:
+      - name: webapp2
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp3
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp3
+    spec:
+      containers:
+      - name: webapp3
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-svc
+  labels:
+    app: webapp1
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: webapp1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp2-svc
+  labels:
+    app: webapp2
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: webapp2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp3-svc
+  labels:
+    app: webapp3
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: webapp3
+    
+  apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: webapp-ingress
+spec:
+  rules:
+  - host: my.kubernetes.example
+    http:
+      paths:
+      - path: /webapp1
+        backend:
+          serviceName: webapp1-svc
+          servicePort: 80
+      - path: /webapp2
+        backend:
+          serviceName: webapp2-svc
+          servicePort: 80
+      - backend:
+          serviceName: webapp3-svc
+          servicePort: 80
+          
+  ******REF******
+  
+  kubectl get ing ---- to get the ingress rules.Ingress rules are an object type with Kubernetes. 
+  The rules can be based on a request host (domain), or the path of the request, or a combination of both.
+  
+  kubectl get pods --selector="name=bad-frontend" --- to get the info of the particular node using selector.
+  
+  
