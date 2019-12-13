@@ -586,4 +586,129 @@ spec:
   
   kubectl get pods --selector="name=bad-frontend" --- to get the info of the particular node using selector.
   
+  ******REF******
+  Creating persistant stores
   
+  apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-0001
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: 172.17.0.78
+    path: /exports/data-0001
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-0002
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: 172.17.0.78
+    path: /exports/data-0002
+   
+  ******REF******
+  kubectl get pv --- To get the Persistance volumes in Kubernetes. They are the data volumes in which the application data could be stored.
+  
+  ******REF******
+  To claim persistance we need to have persistance volume claim
+  kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim-mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim-http
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+      
+  ******REF******
+  
+  kubectl get pvc --- to find the list of persistant vlume claim. The value defined in claim will take from any of the 
+  persistance volume created.
+  
+  ******REF******
+  
+  apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    name: mysql
+spec:
+  containers:
+  - name: mysql
+    image: openshift/mysql-55-centos7
+    env:
+      - name: MYSQL_ROOT_PASSWORD
+        value: yourpassword
+      - name: MYSQL_USER
+        value: wp_user
+      - name: MYSQL_PASSWORD
+        value: wp_pass
+      - name: MYSQL_DATABASE
+        value: wp_db
+    ports:
+      - containerPort: 3306
+        name: mysql
+    volumeMounts:
+      - name: mysql-persistent-storage
+        mountPath: /var/lib/mysql/data
+  volumes:
+    - name: mysql-persistent-storage
+      persistentVolumeClaim:
+        claimName: claim-mysql
+apiVersion: v1
+kind: Pod
+metadata:
+  name: www
+  labels:
+    name: www
+spec:
+  containers:
+  - name: www
+    image: nginx:alpine
+    ports:
+      - containerPort: 80
+        name: www
+    volumeMounts:
+      - name: www-persistent-storage
+        mountPath: /usr/share/nginx/html
+  volumes:
+    - name: www-persistent-storage
+      persistentVolumeClaim:
+        claimName: claim-http
+        
+   The above one is to create a Pod which claims the persistance volume already present while initializing the Pod.
+   
+   ******REF******
+   
+   kubectl create -f pod-mysql.yaml -- to create a Pod from the yaml file.
+   
+   kubectl delete pod www -- to delete a POD created.
+   
+   
+   
+   
