@@ -840,6 +840,21 @@ spec:
   
   ******REF******
  
+ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml --- This file is needed
+ to get the access for the Kubernetes console.
+ 
+ kubectl proxy -- this has to be run after executing the above.
+ 
+ Once the above command is done, use the URL to access the console,
+ 
+ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+ 
+There are two ways to access the dashboard one is to create a service account and another way is to use a kubeconfig file.
+For token generation, we could follow the content as below,
+
+https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+
+
  
    
    
