@@ -12,6 +12,20 @@ kubectl cluster-info -- to get the info about the cluster.
 
 kubectl get nodes -- To get the nodes runnning in the cluster.
 
+kubectl edit deploy/sise-deploy -----  to edit the existing deployment and make changes.
+
+kubectl rollout status deploy/sise-deploy  -- to check the status of the rollout. This is done when a new version of the same 
+package is deployed.
+
+kubectl rollout history deploy/sise-deploy -- to check the status of the rollout deployment.
+
+kubectl rollout undo deploy/sise-deploy --to-revision=1 -- to rollback to the older version. The revision number 1 is from the 
+output of the rollout history.
+
+kubectl get pods --show-labels -- to show the detailed output of the pods.
+
+
+
 The flow of Kubernetes is as Cluster -> Nodes -> Pods -> Containers. A node may be a physical or virtual Machine which could 
 contain multiple pods and each pod may contain multiple container depending on the input given.
 
