@@ -2,6 +2,8 @@ docker run -d --name redisDynamic -p 6379 redis:latest --- to specify a port for
 
 docker port redisDynamic 6379 -- to find the actual port that is being mapped to the container.
 
+docker exec -it <Containername> <command> -- to connect to a running container and execute the command
+
 docker ps -q ---- to list all the container ID's
 
 docker search redis --- to find the list of sources from where the image can be found and used
