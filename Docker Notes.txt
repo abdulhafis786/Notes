@@ -4,6 +4,8 @@ docker port redisDynamic 6379 -- to find the actual port that is being mapped to
 
 docker exec -it <Containername> <command> -- to connect to a running container and execute the command
 
+docker commit -c 'CMD["redis-server"]' <container id> --- to set a default command to the container while building container with commit
+
 docker ps -q ---- to list all the container ID's
 
 docker search redis --- to find the list of sources from where the image can be found and used
