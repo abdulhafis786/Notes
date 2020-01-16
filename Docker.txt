@@ -2,6 +2,7 @@ sudo -i
 usermod -aG docker ubuntu
 exit
 
+alpine : the most essential and strip down image a docker can provide. Any image could have a tag of alpine.Alpine is also an image.
 
 FROM alpine:latest
 RUN apk update
