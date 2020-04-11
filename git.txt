@@ -1,5 +1,7 @@
 git config --list --- to list the configuration of the Git installed
 
+git config --global --edit -- to edit the global user name used during commit 
+
 git help <option> --  to show the manual entry for an specific option
 
 git init --- to initiate a diretory as GIT repository
@@ -23,7 +25,8 @@ git commit -a -m "Skipping the add command" -- Skipps the git add command and go
 
 git rm --cached anywaygonnaremove.txt --- to remove the file from the staging area
 
-if just deleted the file with rm command it removes it from the directory but does not remove it completly. To remove it completly give git rm <file name>. 
+if just deleted the file with rm command it removes it from the directory but does not remove it completly. To remove it completly give git rm <file name>.
+ 
 
 git log -p -2
  --- shows the last two lines indetail of the log
@@ -155,7 +158,7 @@ f120ad7 tracking
 git diff master...tracking -- to show me the difference between my master branch and the tracking branch. This is called a three dot method
 
 git config --global rerere.enabled true --- this option when enabled is a way of shortcutting manual conflicts.When rerere is enabled, Git will keep a set of pre- and post-images from successful
-merges, and if it notices that there’s a conflict that looks exactly like one you’ve already fixed, it’ll
+merges, and if it notices that thereâ€™s a conflict that looks exactly like one youâ€™ve already fixed, itâ€™ll
 just use the fix from last time, without bothering you with it.rerere (reuse reorded resolution)
 
 git describe master -- to show what tag is present, how many commits happened and the last commit hash value
