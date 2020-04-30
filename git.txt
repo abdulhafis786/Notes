@@ -1,5 +1,7 @@
 git config --list --- to list the configuration of the Git installed
 
+git rev-parse HEAD --- to show the exact place of the HEAD. Current commit
+
 git config --global --edit -- to edit the global user name used during commit 
 
 git help <option> --  to show the manual entry for an specific option
