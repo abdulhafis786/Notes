@@ -1,0 +1,877 @@
+App engine: google cloud platform as a service funtion
+
+Compute engine : GCP infrastructure as a service Function
+
+Kubernetes Engine : Managed Kubernetes funtion to running application in containers
+
+Cloud function: Function that helps in uploading files to the cloud.
+
+VPC: For organizing the cloud resources
+
+Network services: This is used for Loadbalancing and cloud DNS
+
+Bigquery : For managing Data warehousing and Data analytics.
+
+pub/sub : Messaging queue service
+
+What is Cloud computing?
+
+Comparing to traditional DC in cloud computing we;
+
+--> rent instead of own resources
+
+--> Pay as we go and for what we use
+
+--> Elastic resource workload
+
+--> Specialized services such as Machine learning is also available
+
+GCP Services (Important to pass)
+
+Compute engine : Place where we create Virtual machines.
+
+App engine : Place where we create application. Here it creates the servers on its own
+
+Kubernetes engine: Orchestration tool which helps in container management
+
+Cloud function: Useful for short driven function such as uploading files to the cloud or writing a short topic for Pub/sub services.
+
+GCP storage:
+
+Has different types of storage such as 
+
+--> No sql DB
+
+--> Relational DB
+
+--> File system
+
+--> Object system
+
+Three known SQL storage are :
+
+-- Bigtable: is a wide column data base
+
+-- Datastore: These are document database
+
+-- Firestore: These are document database and this is the next gen of datastore platform
+
+Two known Relational DB are:
+
+-- Cloud SQL : is a managed DB which runs my sql and postgres SQl DB.
+
+-- Cloud spanner: is horizontally scalable global relational DB.
+
+Cloud Filestore:Managed NFS which is used to store files persistantly and to share the files with others
+
+Cloud storage:  Object storage system which stores data into buckets.Bucket can contain files objects and folders. Used for storing large amount of unstructured data and archives.
+
+Networking::
+
+They are organized as Virtual private cloud which are the collecttion of subnets, instances and other resources we create in GCP.
+
+VPC network peering and Shared VPC is a method of sharing VPC network of one project to another.
+
+Network services: Allows for Netowrk loadbalncing. GCP has five types of loadbalancing in which 3 support global LB and 2 support regional Loadbalancing.
+
+Cloud DNS: This is a Domain name service in GCP
+
+Cloud CDN: This is a content Distribution network for distributing static ontent around the globe.
+
+Hybrid connectivty(important) :
+
+VPN: Used on on-premisis DC on google cloud.
+
+interconnect: These are High Bandwithg Dedicated connection when VPN does not provide insuffcient Bandwidth.
+
+GCP special Purpose services::
+
+Stack drivers: For monitoring application performances.
+
+Stack driver trace & Debug:  These are used by devops and developeers.
+
+Stack Driver logging: Is a centralized logging services.
+
+
+Tools to be familiar with :
+
+--- Cloud build :; For building containers
+
+-- Container registry: For managing and sharing containers
+
+-- Deployment Manager:  For deploying and managing Infrastructure applications
+
+Big Data::
+
+Dataproc:Managed Hadoop and Spark service
+
+Bigquery: Data anlytics database
+
+Dataflow: Stream and batch processing service based on Apache bean
+
+pub/sub: Message wueue service used by application to share data in asynchronus manner.
+
+---------------------------------------------------------------
+
+Console of a GCP:
+
+Projects: Collection of resources that are managed as administrative unit.
+
+Cloud shell: Small Virtual machine used to interact with the GCP using command line.
+
+GCP operates multiple events in the background. To know what are the activities going on click on activity in the console. 
+
+You can filter them with the help of categories which are:
+
+-- Configuration
+
+-- Data access 
+
+-- Developement
+
+-- Monitoring
+
+You can filter with the resource type as well to identy the events happening.
+
+To tag a service on the top of the home page just pin them with the push pin icon on the service. It will be visible in both under home and below in the service location. To unpin the service just click on the Blue pushpin icon and it will be removed.
+
+-------------------------------------------------------------------
+
+Google has a in-build editor to work with the files in terminal. Type the content and Save and it will automatically save in the home directory of the Cloud machine.
+
+We can also work with cloud SDK commands to work in local machines. The two important commands that we use is gcloud and gsutil.
+
+Gcloud command is organized into group for each resources. eg: gcloud compute instance will work for compute instances.
+
+gsutil command is used for working with cloud storage. Cloud storage is not a file based storage system but an object based storage system. eg:gsutil mb ac-cloud-engineer-bucket-123456
+
+bq is a command line utility for working in bigquery.
+
+cbt is a command line utility to with cloud big table.
+
+--------------------------------------------------
+
+you need to have the roles enabled for billing which could be either the owner roles or project billing manager roles.
+
+Before we enable the use of services we have to enable API for it. This is to prevent paying for resources which we were not intended to use.
+
+-----------------------------------
+
+Resource hierarchy is an abstraction used in GCP that helps us to organize projects and resources. it aloows us to impletemt ownership and access control and can implement access control through policies. Policies are set of operation that tells who can do what on a resource.
+
+Components or resource hierarchy:
+
+Organization: Root of the hierarchy
+
+Folders: Collections which can hold Projects and other folders.
+
+projects: Projects are the thing we work with resources such as virtual machines cloud buckets.
+
+Resources: Anything we use in a project is a resource.
+
+-------------------------------------------------
+
+IAM: It represents the user or other entitiy in a project that has previliges to perform actions in GCP.
+
+4 types of IAM:
+
+Google Account: Represnts developer or admin. it has an entity associated with a google email address
+
+Gsuite account and cloud identity: G suite user is a member of an organization's G suite domain. Cloud identity like G suite but it does not access to G suite services.
+
+Google group: It is a collection of identities and used for assigning roles to multiple users. identiites in group aquire roles assigned to the group. Identities lose roles when the group is removed
+
+Service account: This account is associated with an application or instance rather than a user. Mostly used in batch services where the process can work with the access of the instance rather than the user. Also represented by email addresses
+
+Access control concepts:
+
+Resources: Access given to the resources such as virtual machine bucker etc.
+
+Permissions: Basically gives asscess to the hodder of a permission to do something like write files to a bucker etc. These are associated with Roles.
+
+Roles: Collections of permission that are assigned to identities.
+ -- Predefined: Roles are created bu google. always best to use them
+ -- Custom: Created based on predefined roles and removing certain permissions as required.
+ -- Primitive: Roles which existed before IAM was used. Not used in general.
+
+
+Policies: These are collection of statements that define which user has access to some resources. Policies are attached to a resource. Roles are attached to identities(identities can be either members or service accounts ) while policies are attached to resources. You can attach to policy to a hierarchy .
+
+IAM Assignmnts:
+
+The table mentioned in IAM is the entities. entities can be memebers, service accounts etc.
+
+Predefine IAM roles:  Roles that are defined by Google itself.
+
+Custom roles: Roles that are created by the user for specific purpose.
+
+Custom roles have Role launch stage which is of 4 types:
+
+Alpha:  The roles defined are not finalized and may change
+
+Beta: The roles defined are not finalized and may change
+
+General availability: Some roles are available to use and the configuration is not likely to change.
+
+Disabled: This means that the role is no available and been disabled.
+
+IAM Best practices:
+
+Always recommended to use predefined tasks. These are based on common tasks that contain minimal set of previleges which is the principle of least previleges.
+
+Exception: Use primitive roles in small develoement environments where small number of users have broad access
+
+Define Resource hierarchy: which means to specify organization and structure and attach policies at the appropriate level to take advantage of inheritance.
+
+Use groups and service accounts: Groups are collection of users and assign the roles to the group which will assign the same to the members of the group. Always use seperate service accounts for seperate funtions.
+
+Use custom roles sparingly: Use always predefined roles and if that is not satisfying the condition then we can switch to custom roles.
+
+Cant assign permission to identities: Permission cannot be assigned directly to identities. Assign permission to roles and roles to the identitiy.
+
+------------------------------------------------------
+
+Creating VM using cloud shell:
+
+gcloud compute instances create ace-exam-instance-4 --zone=us-webst-b --machine-type=g1-small --boot-disk size=16GB ---- to create a Virtual machine in command
+
+gcloud compute instances list ---- to list all the instances running.
+
+if you have to work on Google SDK to create VM's then we need to install  the SDK on the local machine where we want to connect and work.
+
+compute machine engine types:
+
+Shared core VM: Runs on single hardware hyperthread and hosts the CPU running on instances. Used for non intensive work loads.
+
+Standards Vm: Balanced combination of shared core and standard.
+
+High memory: These have high memory per CPU than standard memory types. Useful for memory intensive apps such as database and caches.
+
+High CPU: These have more CPU than standard VM's. used for More work intensive machines such as Machine learning.
+
+Mega memory and Ultra memory: Used for very high intensive work. Has memory of 3 TB.
+
+Premetible VM's --- VM's that are short lived and are destroyed as the demand increases. They do not have options to get restarted.
+
+------------------------------------------------------------
+
+Instance groups: Collection of instances that are managed as a single entitiy. Usually created for HA in multiple zones.  They are of two types.
+
+-- Managed instance groups: Set of identical VM's and their configuration is defined in instance templates. Their feature include auto scaling, auto healing, Multiple zone deployment and auto updating.
+
+-- Unmanaged instance groups: Multiple possible hetrogenous VM's used to apply loadbalancing across hetrogeneous group of instances. recommented only for legacy clusters only. No autoscaling, auto healing or auto-updating.
+
+Autoscaling configuration: Automatically adds or removes instances based on workload. It has a minimum and maximum set of instances. Based on target utilization on few measurements such as CPU utilization, Http loadbalancing, Stack driver metrics.
+
+Cooldown period: Time allowed for the instances to finish initializing. during this time the autoscaling does not collect metrics to determine whether the instances are needed to be added or removed.
+
+Stabilization period: This is the time when autoscaler uses to calculate MIG's( managed instance group)  recommented target size. Usually set as 10 mins
+
+These two are used to avoid thrashing.i.e adding and removing instances rapidly.
+-----------------------------------------------------------
+
+GCP Kubernetes engine:
+
+Kubernetes: managed services which provides Kubernetes clusters. It runs clusters of containers on physical or virtual VM's. Also called container orchestration.
+
+Features of K8 are;
+
+provided Loadbalancing
+Uses Node pools to segment nodes in a cluster
+Auto scaling anf updating
+Auto healing
+Stackdriver monitoring
+
+Architecture of K8:
+
+Kubernetes process objects::
+
+-- Pods: Pod is a mechanism for encapsulating and running container.
+--Deployment: Deployment is a specification of telling to run a specific number of pods. Set of pods which are executing a certain container.
+--- Services:Basically a mechanism of service discovery. Way of identifying a particulr IP address and the service would determine the IP address of the pods.
+
+On a Higher level of understanding of K8 is the service which provides an endpoint with a stable IP address wraps a deployment which is a set of replicated pods that runs in the container.
+
+Kubernetes Storage objects:
+
+-- Persistant volumes: It is some unit of storage that exists outside of the pod and will exist even if the Pod is shutdown 
+-- Persistant volume claims: Pod makes use of that persistant volume if it has something called persistant volume claims. Its a mechanism that allows the pod to work with the data on the volume.
+
+gcloud container cluster create <name> --zone=us-west1-b --machine-type=n1-standard-1 --disk-size=100 --- command to create K8 cluster in command line.
+
+gcloud container clusters list -- to list the clusters running.
+
+in Kubernetes we called application as workloads.Kubernetes terminology of running a container is deploying.
+
+-------------------------------------------------
+
+kubectl::
+
+Also called as kubecontrol is a command line utility for running commands in a Kubernetes cluster. It complements gcloud container commands which are used to manage clusters.
+
+kubectl operations:
+
+Autoscale
+Clusterinfo
+config
+create
+delete
+describe
+expose(a service)
+run (an image)
+
+Kubernetes is monitored using stackdriver monitoring in GCP.
+
+Node-pool is implemented aa a managed instance group. Its a group of managed instances that have the same configuration.
+-------------------------------------------------------------------------------------------------
+
+Google app engine::
+
+Its a platform as a service and a serverless managed service and its well suited to run micro services. Originally it was limited to language specific runtimes but now its has app engine flexible that can run into containers.
+
+Appengine standard Vs app engine flexible:
+
+App engine standard: 
+
+runs apps in a pre-configured containers and apps are run in a secure sandbox. Enablles Autoscales. Standard runtime are Python,java,nodejs,php,ruby,go Components are Application, service, version and instances.
+
+App engine flexible:
+
+Runs customized docker container. Not restricted as sandbox used in app engine standars. Supports java, ruby and other languages but can be cutomized. it can run locally without app engine SDK. It cah have custom health checks and have higher cpu and memory limits. Also applications are run in regional managed groul not zonal managed instance group.
+
+gcloud components install app-engine-python -- to check and install the updated components.
+
+gcloud app deploy <file> --- command for app engine deploying a file.
+
+gcloud app browse -- to know which is our appengine URL.
+
+Scaling app engine:
+
+Applications execute on app engine managed instances.They scale based on load when running dynamic instances. It can configure resident instances to run at all times but when autoscalling enabled use dynamic instances.
+
+for configuring autoscaling you must be specifying them in app.yaml. Configuration options include
+target CPU utilization
+target thrroughput utilization
+max concurrent request
+max pending latency
+min pending latency
+
+Splitting traffic in App engine.
+
+if more than one version of app is running you can split traffic between versions. 3 ways to split traffic are
+
+--> ip address
+--> http cookie
+--> random selection
+
+Splitting by IP address:
+
+This provides stickiness so all taffic from IP address handled by same instabces . This can create problem if state is maintained and user changes IP address.
+
+Splitting by cookie:
+
+Preferred method for splitting traffic. works with http request header contains a cookie named GOOGAPPUID containing a hash value, This value determines instances to route traffic too. this tolerats user IP changes 
+
+Splitting by random selection:
+
+This is useful for stateless application. Used always when no need to ensure that the traffic from a client goes to the same instance. used when no GOOGAPPUID cookie.
+
+---------------------------------------
+
+Cloud funtions::
+
+Cloud functions are serverless compute service. They execute code in response to events happen within GCP and are based on triggers. Available for events in 
+Cloud storage
+Cloud pub/sub -- writing a topic
+http
+firebase
+Stackdriver logging.
+
+Events are specific to a GCP service
+
+Triggers: Basically a declaration of interest in a event. Usualy we bind funtions to a trigger and execute it. This maybe associated with a resource such as cloud storage bucket and a topic.
+
+Functions: Executable code that is going to run when trigger is executed.
+
+Default memory assigned to a cloud function is 256mb and the default name of the file retrieved from cloud storage if no name is specified is main.zip
+
+gsutil cp <file name> gs://<bucketname>/ -- to copy a file to the bucket .File format to be stored in GCP bucket is .zip
+
+gcloud functions deploy <Functionname> --runtime=python37 --trigger-resource=<bucketname> -- trigger-event=google.storage.object.finalize --source=gs://<bucketname>/<filename> --- Here we are triggering the functiion whenever the file is uploaded in bucket and what type of file it is.
+
+-----------------------------------------------------
+
+Cloud run::
+
+Cloud run is a service for running container in Gcloud in K8 cluster. its a compute service specifically designed for stateless containers which means if the container would fail and start up the second container which came up does not depend on the memory of the first container. Its available in 2 forms.
+
+--managed services: Google cloud basically manages everything
+--Anthos: its a managed application platform that manages K8.
+
+As managed service cloud run is
+
+--- Pay per use
+--- up to 1000 services per region and 2 GB memory per container instance and 2 VCPU per container instance.
+--- Manage identities that can access service or allow unauthorized access.i.e allowing the access to the web.
+--- Containers isolated to Gvisor sandbox which is a platofrm which places each of the container in their own kernel which is secure moduel of running containers.
+
+Cloud run resources:
+
+Services is the main abstraction of cloud computing in cloud run. it can run in single instance or multiple instances. These are located in a region and replicated across multiple zones for high availablilty.
+
+Revision is a deployment of service. Consists of a region specific image and a configuration.
+
+Container instances are the one where the revisions run . They get autoscaled depending on the load by cloud run.
+
+Concurrency:
+
+In Cloud run by default container instance can receive up to 80 requests at the same time which is different that cloud function which can have ony one.
+.
+Possible to reduce concurrency to 1 and this can happen when each request consumes most CPU and memory or the image not designed to handle multiple requests
+
+----------------------------
+
+Anthos::
+
+Its one of the exiting service that google has declared. Its  the key to enable hybrid and multi cloud environment.Its an application managed platform based on kubernetes. Basically the core of anthos is to enable customer move to cloud.This spans cloud on on-premisis. its provided in  three types.
+
+Anthos GKE(GCP)
+Anthos on-prem
+Anthos aws.
+
+Anthos supports microservices architecture which is Anthos services mesh with istio which is a opensource project used with K8. Anthos allows fine grained traffic control and with automatic monitoring with metrics logs and traces. it enables service-servoce authentication and authorizarion.
+
+Network acrosscloud and on-premises which can be either with VPN, dedicated interconnect and partner interconnect.
+
+Anthos config management:
+
+Anthos uses declarative model for specifying configuration. When config varies in specifiction anthos automatically adjusts nd addresses the differences. The configurations are stored in git as VC. Anthos uses policy controller that enforces business logic on API requests.
+
+Consolidated monitoring and logging:
+
+Cloud logging is unified store for logs.  Clusters automatically send log messages. Cloud audit logs automatically sends log messages about interactions with control components.like change in configuration etc. K8 engine monitoring collects metrics for debugging and alerting.
+
+------------------------------------------
+
+Chosing different compute services::
+
+Options:
+
+--> compute engine 
+   Maximum control and configurability. Can choose a predefined machine or a custom CPU.
+   Advanced security such as Shielded VM's and sole tolerance
+   Attach as root or admin and do our work
+--> Kubernetes Engine
+   Managed cluster. used when containers are used. if you want portability in containers
+   Containerized applicatios
+--> App engine
+   Platform as a service. Also runs containers as App engine flexible. flexible environment with custom containers.
+   Minimal configuration requirement
+--> Cloud functions
+   Responding to events in GCP
+
+Compute service tips:(very important)
+
+Know about compute engine:
+how to create instances in console and command line eg.gcloud compute instances 
+Advanced feature eg. sole tenency, shielded VM, GPU
+images and snapshots
+Managed instance group and templates
+understanding basic Cost structure more CPU and memory more cost.
+Gcloud compute commands.
+
+know about Kubernetes engine:
+Container orchestration
+Single cluster master multiple worker nodes
+Pods, deployment and services. 
+  Pods are entities that encapsulate in a container. Multiple pods are grouped as deployment and services provide a single   logicall end point or service discovery of working with pods.
+when to use gcloud container vs kubectl. 
+  Gcloud is used when working with cluster in Google cloud while kubectl is used in K8 itself
+how to view container registry images and details
+
+know about App engine:
+Applicyion structure -- services, versions and instances,
+Deploying an application with app.yaml
+scaling options
+splitting traffic.
+
+Know about cloud functions:
+executes code based on response to an event.
+Events can be in
+	cloud storahe
+	cloud pub/sub
+	HTTP
+	Firebase
+	Stackdriver logging
+-------------------------------------------------------------------
+
+Storage systems::
+
+Storage in GCP:
+Object storage -- provided by Cloud storage
+instance storage--  provided by Persistant disks
+Database storage -- provided by DB's such as SQL, No SQL, Analytic
+
+Managed databases in GCP:
+SQL -- provided by cloud sql and cloud spanner. These are relational DB's
+No SQL -- provided by cloud datastore/ firestore which is a document type DB  and bigtable which is a wide column DB
+Analytics -- provided by bigquery used for data warehousing and large scale data analysis.
+
+Cloud storage buckets::
+
+Cloud storage is a object storage in Gcloud. The top level structure that we work in Gcloud is a bucket. A bucket is a data storage logic that holds data in files and folders. 
+
+While creating a bucket there is a option to choose where to store the data and the options are
+regional-- accessed from one region
+multi-regional -- Accessed from multiple locations
+Dual-regional -- Accessed from two locations
+
+Also the option to store the default storage class such as 
+Standard:-- where data is accessed frequently
+Nearline-- Where data is accessed once a month
+Coldline-- where data is accessed once a year. 
+Notice that the data stored in nearline and cold line will be accessible once a month or year but cost is higher.
+
+Access control is set either as objectlevel and bucket level or only bucketlevel.
+
+Versioning and object life cycle managemet:
+
+Object life cycle managent is a way of managing the buckets. Its to move the files from a regional location to nearline or multiline to reduce the cost. 
+Cloud SQl is a regional database while cloud spanner managed relational database which is horizontally scalable cloud Databae. This is useful if you want strong consistancy in your data and have multiple users in different regions.
+
+In spanner we create a instances which are set of VM's that run the spanner Database.
+
+Cloud datastore:
+
+This is a nosql database.
+
+When creating a new datastore we get to choose the mode in which the data need to be stored.
+
+Native mode -- this opens the cloud Firestore mode which includes real time sync 
+Data store mode -- Uses a cloud behavior API that runs on top of cloud Firestore. usuallty datastore is chosen.
+
+here there is no instances needs to be chosen as this a serverless Database.  The way datastore works is that you can have one database for the entire project and inside the database you can have entities
+
+An entity is a close relation to a table in a relational database. Entites exist in a name space in a datastore. In a NoSQl Database you have multiple structure which can be different from one entity to another.
+
+Index allows us to lookup entities by that particular value.
+
+Datastore hasa concept of composite indexing which is indexing on two or more properties.
+
+Cloud Bigtable:
+
+Cloud bigtable is a fully managed wide table nosql database. Its designed for low latency and high availbility for Iot operations. Its designed for analytics. Its a managed Database but its not serverless.
+
+In bigtable there are two options for instance type such as production which is used for production environment and developement which s used for testing and other stuffs which does not provide high availablty and high performance.
+
+We can specify multiple clusters in bigtable. In each cluser  we have to specify nodes which store metadata about the data. whenever bigtable needs some info on the data it refers to the metadata which shows where the data is stored in the bigdata storage system. Bigtable storage system is known as colossus which is a google's global file system which is a successor of google file system. even cloud storage uses colossus.  while the data is stored in colossus, the metadata is stored in the nodes.
+-----------------------------------------------------------------
+
+Cloud memorystore:
+
+This is a differet kind of data store. Clod memeorystore is a caching service but its actually a memservice which supports  two such as managed redis and memcachedd which are both opensource projects.both are used for caching data which use latency storage mechanism so its often used as a frontend for databases where we can cache resutls of database queries so that database doesnt have to execute the query. used in games where the player information is stored as cache and to improve performance. Also for stream processing for Iot where large amoutn of data comes in and you have to process it.
+Cloud memory store is also used for High availabilitu.
+
+Cloud memorystore -- redis.
+
+This can connect with Appengine flexible and standard, compute engine VM's, cloud functions, kubernetes engine clusters.
+This can scale as needed so no need to manage the scaling options
+available upto 30GB od storage and 12 GPS of network throughput
+
+It has two tiers;
+Basic tier:
+ --> Cache with no replication
+ --> No crosszone replication
+ --> No automatic failover
+This actually costs less
+
+Standard tier:
+ --> Cache with replication
+ --> Cross zone replication
+ --> Automatic failover
+
+Differences with open source redis
+
+You cant persist the disks
+These are available in OS versions such as 
+ --> pointi in time snapshots(RDB)
+ --> Logs of write operatios(AOF)
+These are not available in cloud memorystore
+Most parameters set and cant be changed in cloud memorystore
+Some redis commands are blocked.
+Standard tier does not allow reading from replica.
+
+Cloud memorystore -- memcached
+This is a distributed in-memory key-value store
+used for 
+ --> reference data
+ --> Database query caching
+ --> session caching
+instance is one cluster
+Configure based on
+ --> Number of nodes
+ --> Number of VCPU's
+ --> memory
+Can have maximum of 20 nodes and all of the same configuration
+Can have 1 to 32 vCPU/node 1GB to 256GB/node and max of 5TB in an instance
+
+---------------------------------
+
+Choosing a storage system::
+
+Cloud storage:
+Used to store unstructured data such as images, video and text.
+Also for storing Archived data line cold line and nearline data 
+Temporary storage between services such as temporary storage of data for pipeline processing
+Global access which is web accessible
+
+Managed SQL database:
+Relational Databases are
+ --> used to store structured Data
+ --> This requires SQL
+used for  
+ --> ACID transactions 
+ --> Run complex queries
+ --> Joins
+Cloud SQL
+  --> Up to 10 TB
+  --> Regional
+Cloud spanner
+  --> horizontally scalable
+  --> Global
+
+Managed No SQL DB:
+These are used when working with semi structured, flexible schema and has no joins
+Offers two No sql DB:
+Datastore/Firestore
+ --> Document,JSON structure
+ --> Hierarchichal structure
+Bigtable
+ --> Petabyte scale
+ --> wide column
+ --> Low latency writes
+ --> Analytics
+
+Analytic database:
+Big query
+ --> Data warehousing
+ --> petabyte scale
+ --> SQL query language
+ --> Some support for joints
+ --> Not transactional
+
+--------------------------------------------------
+
+Storage system (exam tips)::
+
+Need to understand the difference between Object vs persistant disk vs Managed database
+Cloud storage :
+ --> 4types od storage -regional(least expensive), multi-regional(gives lower latency), Nearline(used to store data accessed once a month), coldline (used to store data accessed once a year or more)
+ --> Life cycle policies
+ --> gsutil-- command line to work with cloud storage
+Persistant disks -- this gives Block storage
+ --> used with VM's
+ --> persist data even when VM shuts down
+NoSQL -- For flexibe schema data
+ --> Datastore/firestore
+ --> Bigtable
+
+Relational for structured data
+ --> Cloud SQl upto 10 TB
+ --> Cloud spanner designed for global database
+Bigquery -- analytics database
+ --> Datawarehousing
+ --> Bq command line tool
+
+------------------------------------------
+
+Cloud Pub/sub::
+
+Its GCP's messaging system. Cloud pub/sub is a message queue service like a repository which means one application reads message while other reads the message and its asynchronous means the app that writes message doesnt need to wait for the application to read it then and there
+
+Topic is a structure for storing messages and subscription enables application to read messages in queue.
+
+Topic is where we write messages to and the subscription is where the messages are read.
+
+Cloud Dataproc:
+
+Its a managed hadoop and spark service. Both hadoop and spark are data analytics tool that are used to work with large amount of data that are too big to fit on the server. Dataproc is a service that manages hadooop clusters. For the first time it will ask to enable the API before creating the cluster.
+
+Clusters is of three types..
+
+Single node --one master with no worker useful for test environment
+Standard -- One master and few workers. If the master goes down then everything will be lost
+High availablity -- Multiple masters and workers.
+
+While creating a cluster you have the option to specify the bucket which is called staging bucket where hadoop will store the data as it moves along the cloud storage.
+
+Hadoop and spark run batch jobs. Hadoop is a batch processing system while spark is an distributed in-memory bigdata system.
+
+
+------------------------------------
+
+Cloud dataflow::
+
+Based on stream and batchprocessing system based on apache bean project. It uses the concept of Job similar to data proc. Here we can build the job using the template. Dataflow is a no-ops service.
+
+-----------------------
+
+Cloud Transfer ::
+
+Sometimes there needs to be trasfer large amount of data from one bucket to another.then we use cloud Transfer appliance. This is used to move large amount of data from one cloud bucket to another. remember the target will always be a Google cloud bucket while the source can be anything from google to aws. Its like scheduling the data trasfter from one platform to another using transfer operation.
+
+------------------------
+
+Big query::
+
+This is a managed service Analytic database. it used sql query language but this is not a transactional database or a relational database. Bigquery is used for large volume of data and used for Data analytics and data warehousing.
+
+We can query the data using the bq which is a command line or via user interface. big query also has a datatrasfer but this is not like the normal datatrasfer. this is used to trasfer data from apps running software as a service in google. Has multiple options such as google play, youtube etc
+
+--------------------------------
+
+Cloud composer::
+
+its a managed service based on Apache Airflow. this defines and executes workflows defined in directed acyclic graphs(DAGs). this can be accessed either vis command line or user interftce. Commanf line utility is gcloud composer.
+
+Workflow in composer is a collection of tashs with dependencies which are defined in python scripts. DAG is stored in cloud storage. these scripts support custom plugins for operators, hooks and interfaces. You can also use python dependant packages.
+
+DAGs are python programs.
+
+Workflow logs are associated with a single DAG task which are available in Airflow web interface and log folders available in cloud storage bucket. Streaming logs are available in log viewer for scheduler, web server , worker etc
+
+Cloud composer architecture:
+
+Cloud composer are deployed in environemnts which are collection of GCP service components based on kubernetes engine.uses a combination of tenent and customer project resources. tenet project means multiple customers can share the same resources in GCloud.
+
+tenent project resources:
+
+Cloud sql -- Stores airflow metadata. limited to default or specific custom service account for the environment.
+Appengine flexible -- hosts the airflow webserver.
+
+Customer project resources:
+
+Cloud storage -- Storage buckets for staging workfloe directed acyclic graphs(DAGs), plugins,logs and data dependencies.
+
+Kubernetes Engine -- For deploying Airflow scheduler, worker nodes and celery executor which is a task queue
+
+Redis is used as a message broker for celery executor. Uses stateful sets to persist messages across container restarts.
+
+----------------------------------------------------------
+
+Cloud datafusion::
+
+Cloud data fusion is a managed service based on opensource CDAP data analytics  platform and a visual tool for building ETL pipelines.
+
+It allows to connect to multiple datasources both within GCP and external things.
+
+its a code free ETL/ELT developement tool and has over 150 connectors and transformations.
+
+Basically its a drag and drop ETL tool
+
+Execution environment:
+
+Cloud data fusion is deployed as a instance which is not a VM running on server. 
+
+its of two types:
+ --> Basic -- Visual designer, transformations, SDK etc
+ --> Enterprise -- Basic plus streaming pipelines, integration metadata repository, high availability , triggers,     schedules etc.
+
+-----------------------------------------------------------------------
+
+StackDriver::
+
+Stackdriver is a observability function in GCP which provides
+-->Obersevability services
+--> Monitor application, instances, clusters,services
+
+it provides multiple services such as 
+--> monitoring
+-->debug
+-->trace
+-->logging
+-->Error Reporting
+-->profiler(APM)
+
+Stackdriver debugger: 
+
+Used by developers to check and debug their application. it does not need the app to be stopped to debug. this is used to monitor variables in running programs
+
+Stackdriver trace:
+
+This is a distributed tracing tool thats used for performance analysis in distributed systems. Used by developers and devops engineers in tracing all the calls to various micro services. It shows how much time is spent in each api calls.
+
+Stack driver error:
+
+This is a service for grouping the same errors in cloud services and applications.its a monitring tool that reports errors in a dashboard like service
+
+Stackdriver monitoring and alerting:
+
+Stackdriver monitoring is a service which monitors all the related objects that are in our GCP. it is used for monitoring application and host performance metrics
+
+if you want to create alerts we need to create alert policies
+
+Stackdriver logging:
+
+here we can specify the type of log that you need or the keywords that are needed to be in the logs or the time frame to view the logs.
+
+------------------------------------------------
+
+EXAM STRATEGIES::
+
+FOLLOW CERTIFICATION EXAM GUIDE https://cloud.google.com/certification/cloud-engineer
+HIGH LEVEL GUIDANCE AND DETAILED TASK
+
+TAKE PRACTICE EXAM PROVIDED BY GOOGLE
+
+IDENTIFY WEAK AREAS
+
+PERFORM TASK USING BOTH CONSOLE AND COMMAND LINE
+
+TIMED TEST. aLWAYS KNOW YOUR REMAINING TIME
+50 MULTIPLE CHOICE QUESTIONS 2 HOURS
+
+MARK QUESTION FOR REVIEW
+
+READ QUESTIONS CAREFULLY
+--> IDENTIFY KEY SERVICE AND SOFTWARE
+--> IDENTIFY TECHNICAL REQUIREMENTS
+
+FOCUS ON HOW TO CHOOSE BETWEEN LIKELY OPTION AND NEAR MISSES
+
+WHAT TO KNOW IN DEPTH.
+IAM
+--> ROLES AND PERMISSION
+--> IDENTITY TYPES AND WHEN TO USE THEM
+NETWORKING
+--> VPC SUBNET , CIDE BLOCKING
+--> FIREWALL, DNS
+--> VPN, CLOUD INTERCONNECT, PEERING
+COMPUTE
+--> COMPUTE ENGINE
+--> KUBERNETES ENGINE
+--> APP ENGINE
+--> CLOUD FUNCTIONS
+STORAGE
+--> CLOUD STORAGE
+--> BIG QUERY
+CLOUD PUB/SUB
+STACKDRIVER
+
+kNOW HOW TO CHOOSE BETWEEN:
+
+CLOUD SQL
+CLOUDSPANNER
+CLOUD DATA STORE/FIRESTORE
+CLOUD BIGTABLE
+BIGQUERY
+CLOUD STORAGE
+CLOUD DATAPROC
+CLOUD
+ DATAFLOW
+DEPLOYMENT MANAGER
+
+ADDITIONAL RESOURCES NEEDED:
+
+GOOGLE PRACTICE TEST
+GOOGLE EXAM GUIDE
