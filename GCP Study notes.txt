@@ -776,7 +776,158 @@ Cloud data fusion is deployed as a instance which is not a VM running on server.
 its of two types:
  --> Basic -- Visual designer, transformations, SDK etc
  --> Enterprise -- Basic plus streaming pipelines, integration metadata repository, high availability , triggers,     schedules etc.
+----------------------------------------------------------------------
+Networking::
 
+Key concepts:
+
+Virtual private clouds(VPC)
+--> Provate cloud which can be managed in GCP
+--> Global resource and not regional or zonal
+--> VPC network
+
+Cloud Router 
+--> Dynamic routing using  border gateway protocol(BGP)
+--> GCP --non google networks
+
+Virtual private network(VPN)
+--> Securely connect networks
+--> IPsec
+
+VPC peering:
+--> Private communication links
+--> Between VPC's
+
+SHared VPC:
+--> Shared VPC across projects
+--> Centrally managed
+
+Cloud Interconnect: Links GCP resources with on-premisis DC
+--> Dedicated
+--> Partner
+
+Firewalls:
+--> Control flow of traffic
+
+Routers define path that network takes from one VM instance to another resource. When a VPC is created we have the option to create multiplte subnet and firewalls
+
+VPC network peering is a method of accessing resources from one VPC to another. Used for VPC across different organization. If the VPC belong to the same organization we can use Shared VPC. The contraint of share dVPC is that they have to exist in same organization. If you want to have multiple resources in different project to share the same VPC we have to have those projects in a organization.
+
+VPN is of two types. Either classic or HA VPN. Tunnels are used to share network traffic in VPN and also a secure mode of transferring the data in a network. Tunnels implement ipSAP(IP Security protocol) used between two IP subnets. Both VPN gateway and a tunnel must be created to implement a GCP VPN
+
+On premisis Network interlink with Cloud:
+
+This is called as Hybrid cloud computing where some resources are in one cloud or on-premisis and other is in GCP
+
+Virtual private network(VPN)
+--> Securely connect networks
+--> IPsec
+--> upto 3GbPs
+
+Peering:( Low level network option to connect  )
+--> Direct connect to google network
+--> Between VPC's 
+--> Partner connect through 3rd party carrier
+
+Cloud Interconnect: (High level network option that comes with Google SLA's)
+--> Direct minimum of 10Gbps with SLA
+--> if used a Partner minimum of 50Mbps
+
+-----------------------------------------------------
+
+IP addressing and CIDR blocking::
+
+Ip addressing:
+
+--> Ipv4(32 bit) and IPV6(128 bit)
+--> Address of device on a IP network
+--> 4 Octet notation eg: 192.168.2.1
+--> its of two parts Routing Prefix(subnet mask) and Device identifiers
+--> Routing prefix specified in CIDR notation
+	--> 192.168.2.1/24
+	--> 24 bits used for routing prefix/subnet
+	--> 8 bits used for device address
+
+CIDR notation:
+
+Classless inter domain routing
+This- represnts block of addresses
+Number after the slash in IP address determines number of available addresses in block. Larger the number after the slash has fewer addresses( thumb rule)
+eg: 192.168.1.0/20  has 4096 aaddresses
+
+Firewall rules:
+
+They are either allow or deny rules which are either ingress(incoming) and egress(outgoing) traffic and they have a priority in which the rules will be applied. 0 is the lowest priority and above 65000 is a highest priority.  There are 4 default firewall rules that are created during a VPC creation. you can delete them if needed but u cant delete the one which are implied.
+
+Load balancing:
+
+Charateristics of GCP load balancing is characterised as below:
+--> Global vs regional
+--> External vs Internal
+--> Traffic types.
+
+Global load balancers:
+used when workloads distributed globally or across multiple regions
+All global loadbalancers are external and it requires premium Tier networking and not standard tier networking
+There are 3 Global load balancers:
+--> http(s) for http and https traffic
+--> TCP Proxy for other tcp traffic
+--> SSL proxy for non https SSL/TLS traffic
+
+Regional LB:
+Used when work is distributed within a region
+There are two regional LB's:
+--> Internal TCP/UDP balances TCP and UDP traffic on provate networs in GCP
+--> Network TCP/UDP balances SSL and TCP traffic not supported by SSL proxy or TCP proxy
+
+To setup a LB we need to setup an instance group and needs to reserve subnets
+
+Cloud DNS:
+
+NS record stores information about the name servers and SOA record stores Start of authority record where the domain is deligated from its parent which are created by default.
+
+Review of Key Network concepts:
+
+VPC:
+This is a Global resource in GCP which has subnets in one or more regions.When you create a default  VPC the subnets will be created in all regions
+Resources can communicate using private IP addressing
+Can share VPC's within organization
+Can peer VPC's across organizations
+
+VPN: 
+This is a Virtual private network which links VPC to an on-premisis network 
+Implemented with IPSec in which data is encrypted and the traffic is routed over public internet
+The speed is upto 3 GBps
+
+Cloud Interconnect:
+This is a Google networking service which is used to connect to GC network from the datacenter
+If the direct Google cloud connection is used the speed can be from 10 GBps to 100GBps
+If partner connection is used then the speed can be from 50mbps to 10 gbps
+
+Peering:
+This is a way of connecting networsk and this a low level network connection
+Traffic is routed using BGP and it does not use GCP objects. Here there is no undertanding or access to GCP objects
+
+Load balancing:
+Global or regional. 3 types of global HTTP(S), SSL proxy and TCP proxy 2 regional which are internal TCP/UDP and Network TCP/UDP
+External or internal
+Traffic types
+
+-----------------------------------------------
+
+Networking exam tips::
+
+understand the Purpose of a VPC
+understand the VPC peering vs shared VPC. The critical question is are all the VPC in the same organisation. If they are in the same then use Shared VPC if not then VPC peering
+Hybrid cloud implementation options
+--> VPN
+--> Cloud interconnect
+--> Peering
+Ip addresses and CIDR blocks
+Domain name services
+Load balancing options
+Firewalls. Key things to remember is  there are the implied rules which cant be deleted and always exist and there are default rules which can be deleted but they have low priority
+Routes
 -----------------------------------------------------------------------
 
 StackDriver::
