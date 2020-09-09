@@ -1,0 +1,295 @@
+Capex vs Opex
+
+Capital expenditure(Capex):
+Spending on infrastructure is completed upfront
+Cost written off over a period of time
+
+Operational expenditure(Opex):
+No up front cost
+pay for service as you consume it
+deduct from tax bill in same year as expense occurs
+
+Typical on-premises Capex costs
+Server costs
+Storage costs
+network costs
+Backup and archive costs
+Datacentre costs
+
+Typical Opex costs for cloud computing
+Server lease costs
+Software and feature leases
+usage/Demand cost scaling
+
+Benefits:
+Capex(benefits)
+Predictability
+Cost effective when you can consume the infrastruture quickly
+
+Opex(benefits)
+try and buy
+Low initial costs
+Demand fluctuation
+
+Scalability:
+Its about increasing nd decreasing the resoources based on workload demand
+its of two types
+Vertical scaling 
+; Also called as scaling up
+Add additional resources to increase the power of the workload
+eg: Add additional CPU to a virtual machine
+Horizontal scaling 
+;Also called as scaling out
+
+
+--------------------------------
+
+Cloud service model::
+
+Traditional
+IAAS
+PAAS
+SAAS
+
+--------------------------------
+
+Google cloud overview::
+
+The google's view: Every company is a data company
+
+Google resources: Region/zone impact
+
+Regions: Independant geographic location which consists of zones. locations have very low network latency and inside each region comes the zone which is a deployment area for GCP area within the region.
+If  we are deploying a high availabiliy application, we deploy in two zones of the same region so if one zone goes down we can have another to serve traffic.
+
+Zonal resources: They operate in one zone. if that zone goes down all the resources in that zone will be down until the service is restored. google compute engine is an example that is a zonal resource. this is a sub data centre within a region
+
+Regional resources: These are deployed with additional redundacy. They  have HA relative to zonal resources.example is a GKE
+
+Multi-regional resources: here the resources are available across the regions. eg: Google storge bucket
+
+Google services:
+
+Compute services which consists of:
+Compute engine
+App engine
+Container engine
+container registry
+cloud functions
+
+Networking services which consists of:
+Cloud Virtual networks
+Cloud load balancing
+Cloud CDN
+Cloud interconnect
+Cloud DNS
+
+Cloud storage and database which consists of:
+Cloud storage
+Cloud bigtable
+Cloud datasource
+Cloud SQL
+persistant disk
+
+Identity and security which consists of:
+Cloud IAM
+Cloud resource manager
+Cloud security scanner
+Cloud platform security
+
+Big data service which consists of:
+Big query
+Cloud dataflow
+Cloud dataproc
+Cloud datalab
+Cloud pb/sub
+Genomics
+
+Machine learning service which consists of:
+Cloud Machine learning
+Vision API
+Speech API
+Natural Language API
+Translation API
+Jobs API
+------------------------------------------------------
+
+Cloud SDK is a developement toolkit that we can install in our laptop to access GCP Vm's
+
+gcloud compute images list -- to list the images available in Gcloud.
+
+Types of cloud services:
+Compute
+Storage
+networking
+application services
+other specialized services
+
+Compute services:
+Compute engine
+Container engine
+Container registry
+App engine
+Clud function
+
+Serverless:
+Run code  environment that does not require setting up VM or kubernetes
+GCP has 2 serverless options:
+App engine:
+Apps and containers that need ti run for extended period of time. it must confirm to specific runtimes
+Cloud functions:
+Running code in response to an event. its a short process
+
+Spectrum of compute
+Compute engine (IAAS)
+Kubernetes Engine (Hybrid)
+App engine(Paas)
+Cloud functions (serverless logic)
+Managed services (Automated elastic)
+
+Storage services:
+Object storage(Cloud storage):
+provides object storage ad it does not store in a conventional file system.Mostly used for storing images and videos
+They are grouped inot buckets and each object is addressable by a URL
+
+File storage:
+Its an Network file system(NFS) and its suitable for applications that require operating system type access to files.
+File system and directories are decoupled ffrom VM
+
+Block Storage:
+Fixec size data structure organized in blocks. These are attached to VM's in GCP They are persistant or ephemeral and have an independant life cycle to that of VM. They support file system level access vs http access to object storage.
+
+-----------------------------------------------------
+
+Projects, Accouts and billing
+
+Google projects form the basis for creating, enabling and using ALL gcp services. This includes managing API, enabling billing, adding/removing collaborators and managing permissions for GCP resources.
+
+Google Hierarchy:
+Organization (Company)
+Folders(Teams)
+Projects(Name of the project of each team)
+Resources(compute engine app engine etc)
+
+All GCP resources you use are associated to the project.
+
+Folders can contain:
+projects
+other folders
+Combination of both
+
+To create folder you mush have the folder admin or folder creator role at parent level.
+
+Folder nesting: nesting flders within the folders
+
+Project identifiers:
+project ID(Globally unique) chosed by you
+Project name (need not to be unique) chosed by you
+Project number(globally unique) assigned by GCP
+
+Billing account:
+
+Cloud billing account defines who pays for a given set of GCP resource and can be linked to one or more GCP projects. Project usage is charged to the linked cloud billing account.
+-------------------------------------------------------------
+only with a guite account we could have a Organization created and map the different projects under it. For a personal account we cant have a organization
+
+
+Google IAM:
+
+Google IAM revoles around this basic info
+
+who--> can do what-->on whihc resources
+
+Who:
+Can be a google account or cloud identity user. it can be a service account, google group or Gsuite admin users.
+
+Role:
+
+it is a set odf permission which can be assigned to users by assigning that role to that user. giving them just what they need to do
+
+Role inheritance: Applying the role at different level.
+Organization : if we apply role at organiation level the user will have access to all the folders and projects associated with the organization.
+Folders: Giving roles to the folder will give them access only to that folder or set of folders
+project: Roles given only to that specific project
+Resources: Roles applies only to that particular resource
+
+Role types:
+Primitive roles: Very loosely defined applied at the top level
+Predefined roles:This provides a granular access for a specific service and are managed by GCP.
+Custom roles: you can create custom role by combining one or more of the available cloud IAM permission. Permission allow users to perform speciic actions on google cloud platform resources.
+
+permiession are represented on the form of
+
+<service>.<resource>.<verb> eg: compute.instances.list
+
+organization administrator:
+if you have an organization associated with GCP, the organization role admin role enables to control all custom role in orgainization. This role can only be applied on organization level. This role can be granted at the project level by project or organization owners if there is no organization like if we use the personal email ID to work with GCP.
+
+------------------------------------------------------
+
+GCP Networking::
+
+VPC is a software version of physical network that provide connection between resources. VPC are global
+Subnets are zonal and can extend across zones in the same region
+subnets are expandable and firewall rules can be applied across zones.
+
+Subnet address space:
+
+Reserved address:These cant be used
+Subnet address:10.10.0.0
+Gateway address:10.10.0.1
+2nd to last address:10.10.255.254
+broadcast address -10.10.255.255
+
+Avoid large subnets to reduce the chance of CIDR range collision
+GCP subnets are expandable(auto-mode expandable from /20 to /16)
+
+VPC features:
+They are transparent
+We can modify the routes in VPC
+Can can hybrid connectivity.
+Can have packet mirroring
+
+Shared VPC:
+Shared VPC allow an organization to connect projects to common VPC network(hub)
+Shared VPC's contain shared networks
+Eligible resources from service projects can use subnets in the shared VPC network
+
+-------------------------------------------
+
+Internal IP addresses
+
+Allocated from subnet range via DHCP
+DHCP lease is 24 hours
+Vm name is registerd automatically to internal DNS
+2 types of internal IP address, static and Ephemeral
+
+static: Assigned untile ecplicitly released( They remain attached to the stopped instances until removed) select if you want the VM to keep IP address
+
+Ephemeral: Deleting and recreating instances will change the IP. Stopping and restarting will not
+
+may choose automatic or custom when selecting ephemeral options.
+
+Internal DNS naming:
+
+[Instance _name].[zone].c.[project_id].internal
+
+Instance_name is the name of the instance
+zone is the zone where your instance is located
+project_id is the project to which instance belongs.
+
+External IP address:
+
+Can be assigned to instances or a forwarding rule
+needed to communicate to the internet, resources outside of VPC
+Only resources with an external IP can send and receive traffic directly to and from outside the network.
+
+
+Static vs Ephemeral External address
+
+Static are long-term assignment and they remain attached to stopped cmpute instances until they are explicitly removed.
+Regional or global options(global reserved for global forward rules used by global load balancers)
+
+Ephemeral remain in place only until compute instances are stopped, restarted or instance is terminated. New IP addresses are assigned when instances are started again
+
+
