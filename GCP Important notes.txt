@@ -1,0 +1,28 @@
+gcloud iam service-accounts create transform-image-sa -- to create a new service account.. Remember cloud function uses service account to communicate between one function to another.
+
+gsutil iam set \
+  serviceAccount:transform-image-sa@[PROJECT_ID].iam.gserviceaccount.com:objectAdmin \
+  gs://mybucket ---- To bind the service account to the resource it needs. Here its a GC bucket. Here it gives more previleges than needed
+
+gcloud functions deploy transformImage \
+  --service-account "transform-image-sa@[PROJECT_ID].iam.gserviceaccount.com" -- Here this command is to map the function with the custom service account using the "--service-account" parameter. Since function uses service account, those are to be mapped with a custom rather than a default.
+
+gcloud iam roles create simpleStorageRole \
+  --project "[PROJECT_ID]" \ 
+  --title "simpleStorageRole" \ 
+  --description "get and create storage objects" \
+  --permissions "storage.objects.create,storage.objects.get"  --- This is to create a custom storage role with only two permissions.
+
+gsutil iam set \
+  serviceAccount:transform-image-sa@[PROJECT_ID].iam.gserviceaccount.com:roles/simpleStorageRole \
+  gs://mybucket --- this is to bind the custom role created to the service account.
+
+gcloud functions deploy transformImage \
+  --service-account "transform-image-sa@[PROJECT_ID].iam.gserviceaccount.com" --- this is to map the function with the correct service account.
+
+gcloud beta functions remove-iam-policy-binding [FUNCTION_NAME] \
+  --member allUsers \
+  --role roles/cloudfunctions.invoker --- In general functions can be invoked by anyone so its always a good practice to restrict the permission with the above command.
+
+""In addition to calling a Google Cloud service like Cloud Storage, you may want to a function to call ("invoke") another function. The concept of least privilege also applies to restricting which functions or users can invoke your function. You can achieve this by using the Cloud IAM roles/cloudfunctions.invoker role. Set IAM policies on each function to enforce that only certain users, functions, or services can invoke the function.""
+
