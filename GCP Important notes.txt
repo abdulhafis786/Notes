@@ -25,4 +25,350 @@ gcloud beta functions remove-iam-policy-binding [FUNCTION_NAME] \
   --role roles/cloudfunctions.invoker --- In general functions can be invoked by anyone so its always a good practice to restrict the permission with the above command.
 
 ""In addition to calling a Google Cloud service like Cloud Storage, you may want to a function to call ("invoke") another function. The concept of least privilege also applies to restricting which functions or users can invoke your function. You can achieve this by using the Cloud IAM roles/cloudfunctions.invoker role. Set IAM policies on each function to enforce that only certain users, functions, or services can invoke the function.""
+--------------------------------------------------------
+https://www.cloudadvocate.net/p/associate-cloud-engineer-study-notes.html
+--------------------------------------------------------
+
+gcloud compute instance-groups managed create test-instance-group \
+    --base-instance-name test \
+    --size 4 \
+    --template test-template \
+    --zone us-central1-a
+
+the above command is to create a managed instance group.
+
+gcloud compute instance-groups managed set-instance-template test-instance-group \
+    --template fort-template \
+    --zone us-central1-a   ---- this is to change a template to a existing managed instance group.
+
+gcloud compute instance-groups managed resize test-instance-group \
+    --size 7 \
+    --zone us-central1-a -- this is to manually change the instances in the managed instance group
+
+gcloud compute instance-templates create fort-template \
+    --machine-type e2-micro \
+    --network fortressnet \
+    --metadata startup-script='apt update && apt -y install apache2' --- this is to create a template 
+
+gcloud compute instance-groups managed delete-instances test-instance-group \
+    --instances example-i3n2,example-z2x9 \
+    --zone us-central1-a --- this is to remove specific instances from the instance group.
+
+gcloud compute instance-groups managed abandon-instances test-instance-group \
+    --instances example-i3n2,example-z2x9 \
+    --zone us-central1-a ----- to abandon few instances from managed instance group.
+
+gcloud compute instance-groups managed recreate-instances test-instance-group \
+    --instances example-i3n2,example-z2x9 \
+    --zone us-central1-a ---- command to recreate instances in the managed instance group
+
+gcloud compute instance-groups managed delete test-instance-group \
+    --zone us-central1-a --- Command to delete the instance group created
+
+gcloud compute instance-templates create test-template \ --- this is to create a preemptible template
+    --preemptible
+
+gcloud compute instance-groups managed set-autoscaling us-central1-pool \ 
+    --region us-central1 \
+    --min-num-replicas 1 \
+    --max-num-replicas 5 \
+    --scale-based-on-load-balancing \
+    --target-load-balancing-utilization .8
+
+The above command is to autoscale the instance group
+
+gcloud compute instance-groups unmanaged create unmanaged-instance-group \
+    --zone=us-central1-a -- to create unmanaged instance group
+
+gcloud compute instance-groups unmanaged list -- to list the unmanaged instance group
+
+gcloud compute instance-groups unmanaged describe unmanaged-instance-group \
+   --zone=us-central1-a  --- to describe about the unmanaged instance group
+
+gcloud compute instance-groups unmanaged delete unmanaged-instance-group \
+    --zone=us-central1-a -- to delete unmanaged instance group
+
+gcloud compute instance-groups unmanaged add-instances unmanaged-instance-group \
+    --zone=us-central1-a \
+    --instances=list-of-VM-names --- to add one or more instances in the unmanaged instance group. Note that the instances must be in the same zone as of the instance group.
+
+gcloud compute instance-groups unmanaged list-instances unmanaged-instance-group \
+   --zone=us-central1-a  ---- to list the instances in unmanaged instance group.
+
+gcloud compute instance-groups unmanaged remove-instances unmanaged-instance-group \
+    --zone=us-central1-a \
+    --instances=list-of-VM-names  --- to remove the VM's from the group.
+
+gcloud compute instance-groups managed create example-rmig \
+    --template example-template  \
+    --size 30 \
+    --region us-east1 -- this command is to create a regional managed instance group
+
+gcloud compute instance-groups managed create example-rmig \
+    --template example-template \
+    --size 30 \
+    --zones us-east1-b,us-east1-c  -- to create the instance group  in specific zones 
+
+gcloud compute instance-groups managed create example-rmig \
+    --template example-template \
+    --size 30 \
+    --zones us-east1-b,us-east1-c \
+    --instance-redistribution-type NONE -- this is to set the instance redistribution to None which means there will be not be even distribution of instances in the zones. To turn on set the "--instance-redistribution-type" to PROACTIVE
+
+gcloud compute instance-groups managed rolling-action start-update instance-group-name \
+    --version template=instance-template-name
+    [--zone zone | --region region] -- this is to update the managed instance group with a new template
+
+gcloud compute instance-groups managed rolling-action start-update my-ig1 \
+    --version template=my-template-A \
+    --canary-version template=my-template-B,target-size=10% --- this is to update a canary version of the template before rolling out the actual template. Canary update is to check if the new template is working fine before roolling out.
+
+--------------------------------------------------------
+
+To query the metadata Server to get the default metadata values give this URL
+
+http://metadata.google.internal/computeMetadata/v1/
+
+eg: curl "http://metadata.google.internal/computeMetadata/v1/instance/disks/" -H "Metadata-Flavor: Google"
+
+Have to pass this header parameter.
+
+gcloud compute instances add-metadata instance-name \
+      --metadata bread=mayo,cheese=cheddar,lettuce=romaine -- to add metadata to the running instance
+
+gcloud compute instances remove-metadata instance-name \
+    --keys lettuce -- to remove the metadata
+
+gcloud compute project-info add-metadata \
+    --metadata foo=bar,baz=bat -- to add the metadata for the project scope
+
+gcloud compute project-info describe -- to describe the project info with metadata
+
+gcloud compute project-info describe \
+    --flatten="commonInstanceMetadata[]" -- to get the project metadata "--flatten" has to be specified.
+
+gcloud compute instances describe example-instance \
+    --flatten="metadata[]" ---- to get instance metadata
+
+
+-------------------------------------------------------------------
+
+gcloud compute instances create nfs-client --zone us-central1-c --image-project debian-cloud --image-family debian-10 --tags http-server --- creating a instance to mount file store 
+
+gcloud beta filestore instances create nfs-server --zone=us-central1-c --tier=BASIC_HDD --file-share=name="vol1",capacity=1TB --network=name="default" ---- to createa filestore instance.
+
+gcloud filestore instances describe nfs-server --zone=us-central1-c --- to get the information on the filestore instance.
+
+To map the instance with nfs you have to do the below,
+
+Install NFS by running the following commands
+
+sudo apt-get -y update &&
+sudo apt-get -y install nfs-common
+
+sudo mkdir -p /mnt/test
+
+sudo mount 10.0.0.2:/vol1 /mnt/test -- Here the IP is the IP of the filestore that is generated.
+
+sudo chmod go+rw /mnt/test --- making the file system read only
+
+gsutil rsync -r gs://data /mnt/filer --- this command is to copy the data from the cloud storage to the VM where the filestore is mapped. This has to be run from the VM machine. Note that the VM machine should have cloud SDK installed.
+
+To copy the file from the machine locally to the filestore in the compute VM, below is the sample,
+
+gcloud compute scp local-data-path client-name:/mount-directory --project=project-id --zone=zone
+
+eg:
+gcloud compute scp /etc/acme/data --recurse nfs-client:/mnt/filer --project myproject --zone us-central1-c
+
+gsutil rsync -r /mnt/filer gs://archive --- this command is to copy the data from the mount to the cloud storage bucket. Note that the VM instance where the mount is should have the readwrite scope to cloud storage. If not then we have to stop the machine and map the access scope to readwrite and then run this command from the VM machine.
+
+-----------------------------------------------------------------------------
+
+gsutil mb gs://BUCKET_NAME ---- to create a bucket in GCP. Note that the bucket name must be unique.
+
+Set the following optional flags to have greater control over the creation of your bucket:
+
+-p: Specify the project with which your bucket will be associated. For example, my-project.
+-c: Specify the default storage class of your bucket. For example, NEARLINE.
+-l: Specify the location of your bucket. For example, US-EAST1.
+-b: Enable uniform bucket-level access for your bucket.
+
+  gsutil mb -p PROJECT_ID -c STORAGE_CLASS -l BUCKET_LOCATION -b on gs://BUCKET_NAME
+
+gsutil ls -- to list bicket.
+
+gsutil du -s gs://test-bucket -- to list the size of the bucket
+
+gsutil ls -L -b gs://test-bucket -- to list the metadata of the bucket
+
+gsutil ls -r gs://test-bucket/** -- to list the objects in the bucket
+
+gsutil defstorageclass set nearline gs://test-bucket -- to change the default storage class of a bucket
+
+gsutil cp -r gs://source-bucket/* gs://destination-bucket --- to copy the contents recursively from source to target bucket
+
+gsutil rm -r gs://source-bucket -- to recursively delete all the objects in the bucket.
+
+gsutil rm -a gs://source-bucket/** -- to delete all the objects but to keep the source bucket
+
+------------------------------------------------------------------------------
+https://codelabs.developers.google.com/codelabs/cloud-bigtable-intro-java/index.html#4 
+
+Set the values as this
+
+INSTANCE_ID="bus-instance"
+CLUSTER_ID="bus-cluster"
+TABLE_ID="bus-data"
+CLUSTER_NUM_NODES=3
+CLUSTER_ZONE="us-central1-c"
+
+gcloud bigtable instances create bus-instance \
+    --cluster=bus-cluster \
+    --cluster-zone=us-central1-c \
+    --cluster-num-nodes=3 \
+    --display-name=identity-demo-1-289005  -- to create a bigtable instance.
+
+echo project = $GOOGLE_CLOUD_PROJECT > ~/.cbtrc
+echo instance = $INSTANCE_ID >> ~/.cbtrc
+
+cbt createtable $TABLE_ID
+cbt createfamily $TABLE_ID cf
+
+Here TABLE_ID == bus-data
+
+Enable the Cloud Dataflow API by running this command.
+
+gcloud services enable dataflow.googleapis.com
+
+Run the following commands to import the table.
+
+NUM_WORKERS=$(expr 3 \* $CLUSTER_NUM_NODES)
+gcloud beta dataflow jobs run import-bus-data-$(date +%s) \
+--gcs-location gs://dataflow-templates/latest/GCS_SequenceFile_to_Cloud_Bigtable \
+--num-workers=$NUM_WORKERS --max-workers=$NUM_WORKERS \
+--parameters bigtableProject=$GOOGLE_CLOUD_PROJECT,bigtableInstanceId=$INSTANCE_ID,bigtableTableId=$TABLE_ID,sourcePattern=gs://cloud-bigtable-public-datasets/bus-data/*
+
+Get the code
+
+git clone https://github.com/googlecodelabs/cbt-intro-java.git
+cd cbt-intro-java
+
+Set to java11 environment as below,
+
+sudo update-java-alternatives -s java-1.11.0-openjdk-amd64 && export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+
+In the Cloud Shell, run the following command to get a list of latitudes and longitudes for that bus over the hour:
+mvn package exec:java -Dbigtable.projectID=$GOOGLE_CLOUD_PROJECT \
+-Dbigtable.instanceID=$INSTANCE_ID -Dbigtable.table=$TABLE_ID \
+-Dquery=lookupVehicleInGivenHour
+
+Run the following command to get the results.
+mvn package exec:java -Dbigtable.projectID=$GOOGLE_CLOUD_PROJECT \
+-Dbigtable.instanceID=$INSTANCE_ID -Dbigtable.table=$TABLE_ID \
+-Dquery=scanBusLineInGivenHour
+
+Run the following command to get the results for buses going west.
+mvn package exec:java -Dbigtable.projectID=$GOOGLE_CLOUD_PROJECT \
+-Dbigtable.instanceID=$INSTANCE_ID -Dbigtable.table=$TABLE_ID \
+-Dquery=filterBusesGoingWest
+
+Run the following command to get the results.
+mvn package exec:java -Dbigtable.projectID=$GOOGLE_CLOUD_PROJECT \
+-Dbigtable.instanceID=$INSTANCE_ID -Dbigtable.table=$TABLE_ID \
+-Dquery=scanManhattanBusesInGivenHour
+
+To avoid incurring charges to your Google Cloud Platform account for the resources used in this codelab you should delete your instance.
+gcloud bigtable instances delete $INSTANCE_ID
+
+-------------------------------------------
+
+gcloud compute routers nats create NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --auto-allocate-nat-external-ips \
+    --nat-all-subnet-ip-ranges \
+    --enable-logging   -- To create a Cloud NAT with automatic IP allocation.
+
+gcloud compute routers nats create NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --nat-all-subnet-ip-ranges \
+    --nat-external-ip-pool=IP_ADDRESS1,IP_ADDRESS2  -- using an static IP address assigned.
+
+gcloud compute routers nats create NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --auto-allocate-nat-external-ips \
+    --nat-custom-subnet-ip-ranges=SUBNETS --- to allocate NAT Address from a subnet range.
+
+gcloud compute routers nats create NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --auto-allocate-nat-external-ips \
+    --min-ports-per-vm=128 --- To specify minimum ports per VM..
+
+gcloud compute routers nats create NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --auto-allocate-nat-external-ips \
+    --nat-custom-subnet-ip-ranges=SUBNETS \
+    --udp-mapping-idle-timeout=60s \
+    --icmp-mapping-idle-timeout=60s \
+    --tcp-established-connection-idle-timeout=60s \
+    --tcp-transitory-connection-idle-timeout=60s  ------- To specify the timeout values while creating NAT.
+
+gcloud compute routers nats update NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --nat-external-ip-pool=IP_ADDRESS2,IP_ADDRESS3 \
+    --nat-custom-subnet-ip-ranges=SUBNETS:range1 -- to update the NAT with the different custom IP and subnet
+
+gcloud compute routers nats update NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --nat-external-ip-pool=IP_ADDRESS2,IP_ADDRESS3 --- to change the External IP associated with the existing NAT. If you do so then all the existing connection will get terminated immediately. To prevent this IP draining is used which would allow the existing connection to terminate once done while preventing new connection to get establisted.
+
+gcloud compute routers nats update NAT_CONFIG \
+    --router=NAT_ROUTER \
+    --nat-external-ip-pool=IP_ADDRESS3 \
+    --nat-external-drain-ip-pool=IP_ADDRESS2 --- specifying a drain IP
+
+NOTE: By default when a NAT is created a  router is also created 
+
+gcloud compute routers nats delete NAT_CONFIG --router=NAT_ROUTER -- to delete a NAT and its router.
+
+gcloud compute routers nats delete NAT_CONFIG --router=NAT_ROUTER --- to describe about NAT and its router.
+
+gcloud compute routers nats update NAT_GATEWAY \
+    --router=ROUTER_NAME \
+    --region=REGION \
+    --enable-logging --- to enable logging to the NAT. It can log errors only on the TCP and UDP traffic.
+
+gcloud compute routers nats update NAT_GATEWAY \
+    --router=ROUTER_NAME \
+    --region=REGION \
+    --enable-logging \
+    --log-filter=TRANSLATIONS_ONLY --- to log network address translation events.
+
+gcloud compute routers nats update NAT_GATEWAY \
+    --router=ROUTER_NAME \
+    --region=REGION \
+    --enable-logging \
+    --log-filter=ERRORS_ONLY --- to log only errors.
+
+gcloud compute routers nats update NAT_GATEWAY \
+    --router=ROUTER_NAME \
+    --region=REGION \
+    --log-filter=ALL --- to clear out the filter set.Clearing a log filter means that both network address translation events and errors are logged, provided that logging is enabled
+
+gcloud compute routers nats update NAT_GATEWAY \
+    --router=ROUTER_NAME \
+    --region=REGION \
+    --no-enable-logging  --- to disable the logging.
+
+gcloud compute routers nats describe NAT_GATEWAY \ 
+    --router=ROUTER_NAME \
+    --region=REGION --- to describe the status of logging.
+
+gcloud logging read 'resource.type=nat_gateway' \
+    --limit=10 \
+    --format=json ---- to read the logs.
+
+
+
+
 
