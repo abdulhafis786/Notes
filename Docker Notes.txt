@@ -2,6 +2,12 @@ docker run -d --name redisDynamic -p 6379 redis:latest --- to specify a port for
 
 docker build https://github.com/abdulhafis786/Dockerfiles.git#master -f Jbossautomationbuild --- to build the image from the git repo. -f is mentioned to specify the file name if the name is not Dockerfile
 
+docker diff <containerID> --- to check which files have been added,modified, deleted
+
+docker events -- to show the events happened such as container creation, restarts, image build etc. Use the -since option to specify a date eg:docker events --since '2021-03-13'. This will give the entire events happened on 13th. multiple options are available to use
+
+
+
 docker port redisDynamic 6379 -- to find the actual port that is being mapped to the container.
 
 docker exec -it <Containername> <command> -- to connect to a running container and execute the command
