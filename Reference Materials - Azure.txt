@@ -1,0 +1,12 @@
+https://learn.microsoft.com/en-us/powershell/azure/?view=azps-6.5.0 -- Powershell references
+https://learn.microsoft.com/en-us/cli/azure/ -- Azure CLI references
+
+Exam practice tests:
+https://www.examtopics.com/exams/microsoft/az-104/view/
+https://www.itexams.com/info/AZ-104
+https://www.certification-questions.com/microsoft-exam/az-104-dumps.html
+https://www.youtube.com/watch?v=FxUfoqCLEcE&list=PLyABYqulvUwZy9lvxpC5cqJVpdMwwaagp
+https://free-braindumps.com/microsoft/free-az-104-braindumps.html?p=1
+https://www.studocu.com/row/document/harvarde-college-of-science-business-and-management-studies/education/az-104-pdf-dumps543-547/29571030
+https://www.dumps-files.com/files/AZ-104/ -- Dumps
+https://www.dumpscollection.net/dumps/AZ-104/ -- dumps
