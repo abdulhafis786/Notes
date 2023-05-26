@@ -1,0 +1,156 @@
+Azure Cloud Shell features:
+
+Is temporary and requires a new or existing Azure Files share to be mounted.
+Offers an integrated graphical text editor based on the open-source Monaco Editor.
+Authenticates automatically for instant access to your resources.
+Runs on a temporary host provided on a per-session, per-user basis.
+Times out after 20 minutes without interactive activity.
+Requires a resource group, storage account, and Azure File share.
+Uses the same Azure file share for both Bash and PowerShell.
+Is assigned to one machine per user account.
+Persists $HOME using a 5-GB image held in your file share.
+Permissions are set as a regular Linux user in Bash.
+
+Azure PowerShell:
+
+Command to create new VM using powershell
+New-AzVm `
+    -ResourceGroupName "CrmTestingResourceGroup" `
+    -Name "CrmUnitTests" `
+    -Image "UbuntuLTS"
+    ...
+
+Azure CLI:
+
+Command to create new VM
+az vm restart -g MyResourceGroup -n MyVm
+
+resource - A manageable item that is available through Azure. Some common resources are a virtual machine, storage account, web app, database, and virtual network, but there are many more.
+
+resource group - A container that holds related resources for an Azure solution. The resource group can include all the resources for the solution, or only those resources that you want to manage as a group. You decide how you want to allocate resources to resource groups based on what makes the most sense for your organization.
+
+resource provider - A service that supplies the resources you can deploy and manage through Resource Manager. Each resource provider offers operations for working with the resources that are deployed. Some common resource providers are Microsoft.Compute, which supplies the virtual machine resource, Microsoft.Storage, which supplies the storage account resource, and Microsoft.Web, which supplies resources related to web apps.
+
+template - A JavaScript Object Notation (JSON) file that defines one or more resources to deploy to a resource group. It also defines the dependencies between the deployed resources. The template can be used to deploy the resources consistently and repeatedly.
+
+declarative syntax - Syntax that lets you state "Here is what I intend to create" without having to write the sequence of programming commands to create it. The Resource Manager template is an example of declarative syntax. In the file, you define the properties for the infrastructure to deploy to Azure.
+
+PowerShell to delete resource groups:
+Remove-AzResourceGroup -Name "ContosoRG01"
+
+retrieve a list of all Resource Groups in the active subscription:
+Get-AzResourceGroup
+
+Create a resource group:
+New-AzResourceGroup -Name <name> -Location <location>
+
+Verify the resources:
+Get-AzResource | Format-Table
+
+Create an Azure Virtual Machine:
+New-AzVm
+       -ResourceGroupName <resource group name>
+       -Name <machine name>
+       -Credential <credentials object>
+       -Location <location>
+       -Image <image name>
+
+The AzVM suffix is specific to VM-based commands in PowerShell. There are several others you can use:
+
+Command	Description
+Remove-AzVM	Deletes an Azure VM.
+Start-AzVM	Start a stopped VM.
+Stop-AzVM	Stop a running VM.
+Restart-AzVM	Restart a VM.
+Update-AzVM	Updates the configuration for a VM.
+
+to restart a virtual machine:
+az vm restart -g MyResourceGroup -n MyVm
+
+Example: find the most popular commands related to the word blob.
+az find blob
+
+Example: Show me the most popular commands for an Azure CLI command group, such as az vm.
+az find "az vm"
+
+Example: Show me the most popular parameters and subcommands for an Azure CLI command.
+az find "az vm create"
+
+Azure management groups provide a level of scope and control above your subscriptions. You can use management groups as containers to manage access, policy, and compliance across your subscriptions.
+
+Azure Policy is a service in Azure that you can use to create, assign, and manage policies. You can use policies to enforce rules on your resources to meet corporate compliance standards and service level agreements. Azure Policy runs evaluations and scans on your resources to make sure they're compliant.
+
+az ad user create
+This command creates a new user by using the Azure CLI
+
+For Azure PowerShell, run the following cmdlet:
+
+# create a new user
+New-AzureADUser
+
+Azure AD concepts:
+
+Identity:	
+An identity is an object that can be authenticated. The identity can be a user with a username and password. Identities can also be applications or other servers that require authentication by using secret keys or certificates. Azure AD is the underlying product that provides the identity service.
+
+Account:
+An account is an identity that has data associated with it. To have an account, you must first have a valid identity. You can't have an account without an identity.
+
+Azure AD account:
+An Azure AD account is an identity that's created through Azure AD or another Microsoft cloud service, such as Microsoft 365. Identities are stored in Azure AD and are accessible to your organization's cloud service subscriptions. The Azure AD account is also called a work or school account.
+
+Azure tenant (directory):
+An Azure tenant is a single dedicated and trusted instance of Azure AD. Each tenant (also called a directory) represents a single organization. When your organization signs up for a Microsoft cloud service subscription, a new tenant is automatically created. Because each tenant is a dedicated and trusted instance of Azure AD, you can create multiple tenants or instances.
+
+Azure subscription:
+An Azure subscription is used to pay for Azure cloud services. A subscription is linked to a credit card. Each subscription is joined to a single tenant. You can have multiple subscriptions.
+
+Azure user types:
+Cloud identity:	
+A user account with a cloud identity is defined only in Azure AD. This type of user account includes administrator accounts and users who are managed as part of your organization. A cloud identity can be for user accounts defined in your Azure AD organization, and also for user accounts defined in an external Azure AD instance. When a cloud identity is removed from the primary directory, the user account is deleted.
+
+Directory-synchronized identity:
+User accounts that have a directory-synchronized identity are defined in an on-premises Active Directory. A synchronization activity occurs via Azure AD Connect to bring these user accounts in to Azure. The source for these accounts is Windows Server Active Directory.
+
+Guest user:
+Guest user accounts are defined outside Azure. Examples include user accounts from other cloud providers, and Microsoft accounts like an Xbox LIVE account. The source for guest user accounts is Invited user. Guest user accounts are useful when external vendors or contractors need access to your Azure resources
+
+Azure Active Directory (Azure AD) allows your organization to define two different types of group accounts. Security groups are used to manage member and computer access to shared resources for a group of users. You can create a security group for a specific security policy and apply the same permissions to all members of a group. Microsoft 365 groups provide collaboration opportunities. Group members have access to a shared mailbox, calendar, files, SharePoint site, and more.
+
+An Azure subscription is a logical unit of Azure services that's linked to an Azure account. An Azure account is an identity in Azure Active Directory (Azure AD) or a directory that's trusted by Azure AD, such as a work or school account. Subscriptions help you organize access to Azure cloud service resources, and help you control how resource usage is reported, billed, and paid.
+
+
+Azure Policy is a service in Azure that enables you to create, assign, and manage policies to control or audit your resources. These policies enforce different rules over your resource configurations so the configurations stay compliant with corporate standards. You apply the policies to your resources by using management groups.
+
+Organizations that use multiple subscriptions need a way to efficiently manage access, policies, and compliance. Azure management groups provide a level of scope and control above your subscriptions. You can use management groups as containers to manage access, policy, and compliance across your subscriptions.
+
+A policy definition describes the compliance conditions for a resource, and the actions to complete when the conditions are met. One or more policy definitions are grouped into an initiative definition, to control the scope of your policies and evaluate the compliance of your resources.
+
+resource - A manageable item that is available through Azure. Some common resources are a virtual machine, storage account, web app, database, and virtual network, but there are many more.
+
+resource group - A container that holds related resources for an Azure solution. The resource group can include all the resources for the solution, or only those resources that you want to manage as a group. You decide how you want to allocate resources to resource groups based on what makes the most sense for your organization.
+
+resource provider - A service that supplies the resources you can deploy and manage through Resource Manager. Each resource provider offers operations for working with the resources that are deployed. Some common resource providers are Microsoft.Compute, which supplies the virtual machine resource, Microsoft.Storage, which supplies the storage account resource, and Microsoft.Web, which supplies resources related to web apps.
+
+template - A JavaScript Object Notation (JSON) file that defines one or more resources to deploy to a resource group. It also defines the dependencies between the deployed resources. The template can be used to deploy the resources consistently and repeatedly.
+
+declarative syntax - Syntax that lets you state "Here is what I intend to create" without having to write the sequence of programming commands to create it. The Resource Manager template is an example of declarative syntax. In the file, you define the properties for the infrastructure to deploy to Azure.
+
+A virtual network can be segmented into one or more subnets. Subnets provide logical divisions within your network. Subnets can help improve security, increase performance, and make it easier to manage the network.
+
+Each subnet contains a range of IP addresses that fall within the virtual network address space. The range must be unique within the address space for the virtual network. The range can't overlap with other subnet address ranges within the virtual network. The address space must be specified by using Classless Inter-Domain Routing (CIDR) notation.
+
+You can limit network traffic to resources in a virtual network using a network security group (NSG). A network security group contains a list of security rules that allow or deny inbound or outbound network traffic. An NSG can be associated to a subnet or a network interface. A network security group can be associated multiple times.
+
+Application Security Groups (ASGs) ) logically group virtual machines by workload and define network security rules based on those groups. ASGs work in the same way as NSGs but provide an application-centric way of looking at your infrastructure. You join virtual machines to the ASG, and then use the ASG as a source or destination in NSG rules.
+
+Azure Firewall is a managed, cloud-based network security service that protects your Azure Virtual Network resources. It's a fully stateful firewall as a service with built-in high availability and unrestricted cloud scalability. You can centrally create, enforce, and log application and network connectivity policies across subscriptions and virtual networks.
+
+Azure Firewall uses a static public IP address for your virtual network resources allowing outside firewalls to identify traffic originating from your virtual network. The service is fully integrated with Azure Monitor for logging and analytics.
+
+A virtual network gateway is composed of two or more VMs that are deployed to a specific subnet you create called the gateway subnet. Virtual network gateway VMs contain routing tables and run specific gateway services. These VMs are created when you create the virtual network gateway. You can't directly configure the VMs that are part of the virtual network gateway.
+
+VPN gateways can be deployed in Azure Availability Zones. Availability zones bring resiliency, scalability, and higher availability to virtual network gateways. Availability Zones physically and logically separates gateways within a region, while protecting your on-premises network connectivity to Azure from zone-level failures.
+
+Azure ExpressRoute lets you extend your on-premises networks into the Microsoft cloud. The connection is facilitated by a connectivity provider. With ExpressRoute, you can establish connections to Microsoft cloud services, such as Microsoft Azure, Microsoft 365, and CRM Online.
+
